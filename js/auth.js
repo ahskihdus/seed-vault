@@ -1,24 +1,43 @@
-async function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+// auth.js
 
-  const res = await fetch("/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
+function openLoginModal() {
+  document.getElementById("loginModal").classList.add("active");
+}
 
-  const data = await res.json();
-  if (res.ok) {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
-    window.location.href = "index.html";
+function closeLoginModal() {
+  document.getElementById("loginModal").classList.remove("active");
+}
+
+function handleLogin() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorBox = document.getElementById("loginError");
+
+  if (username === "admin" && password === "seedvault") {
+    localStorage.setItem("loggedInUser", username);
+    closeLoginModal();
+    alert("Login successful!");
+    updateUserDisplay();
   } else {
-    document.getElementById("message").textContent = data.message;
+    errorBox.textContent = "Invalid credentials. Try again.";
   }
 }
 
-function logout() {
-  localStorage.clear();
-  window.location.href = "login.html";
+function handleLogout() {
+  localStorage.removeItem("loggedInUser");
+  alert("Logged out.");
+  updateUserDisplay();
 }
+
+function updateUserDisplay() {
+  const user = localStorage.getItem("loggedInUser");
+  const header = document.querySelector(".header");
+
+  if (user) {
+    header.innerHTML = `<h2>SeedVault</h2><div>Welcome, ${user}! <a href="#" onclick="handleLogout()">Logout</a></div>`;
+  } else {
+    header.innerHTML = `<h2>SeedVault</h2><a href="#" onclick="openLoginModal()">Login</a>`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", updateUserDisplay);
