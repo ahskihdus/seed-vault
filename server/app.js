@@ -1,11 +1,26 @@
-const express = require("express");
+// server/app.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
 const app = express();
-const PORT = 3000;
+app.use(cors());
+app.use(bodyParser.json());
 
-app.use(express.static("../")); // serve your static site
+// Simple login route for testing
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
 
-app.get("/api/login", (req, res) => {
-  res.json({ message: "Server running fine" });
+  if (username === 'admin' && password === '1234') {
+    return res.status(200).json({ success: true, role: 'admin' });
+  } else {
+    return res.status(401).json({ success: false, message: 'Invalid credentials' });
+  }
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// Export app for testing
+if (require.main === module) {
+  app.listen(3000, () => console.log('✅ Server running on http://localhost:3000'));
+}
+
+module.exports = app;
