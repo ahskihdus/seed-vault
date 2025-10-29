@@ -1,0 +1,20 @@
+{
+  "name": "seedvault",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server/app.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
