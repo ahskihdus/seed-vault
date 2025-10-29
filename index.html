@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<title>SeedVault</title>
+<link rel='manifest' href='/manifest.json'>
+<link rel="shortcut icon" href="a198cd0c_e2f0_4c99_ba51_342624a24db9_WP4_icon.ico" type="image/x-icon"/>
+<link href = "https://fonts.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+<style>
+/* Keeping all original styles and colors (#f56642) */
+* {
+  box-sizing: border-box;
+  text-align: center;
+}
+a {
+  color: #f56642;
+}
+h3, h2, p {
+  font-family: 'Nunito Sans', sans-serif;
+  text-align: center;
+}
+h1:hover {
+  animation-name: artshadow;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+  animation-duration: 0.5s;
+  animation-delay: 0.1s;
+}
+@keyframes artshadow {
+  from {}
+  to {text-shadow: 2px 2px 5px black;}
+}
+h1 {
+  color: #f56642;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 900;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+</style>
+</head>
+<body>
+<img src = "seed.png" align = "center" class = "center" alt="SeedVault Logo">
+
+<h1><a href = "./"><b>SeedVault</b></a></h1>
+<h2>The Digital Archive for Indigenous Languages & Culture</h2>
+<h3>
+    <a href = "seed.html">**Seed**</a> | 
+    <a href = "about.html">**About**</a>
+</h3>
+
+<script>
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+ // Prevent Chrome 67 and earlier from automatically showing the prompt
+ e.preventDefault();
+ // Stash the event so it can be triggered later.
+ deferredPrompt = e;
+});
+
+async function install() {
+ if (deferredPrompt) {
+  deferredPrompt.prompt();
+  console.log(deferredPrompt)
+  deferredPrompt.userChoice.then(function(choiceResult){
+
+    if (choiceResult.outcome === 'accepted') {
+    console.log('Your PWA has been installed');
+  } else {
+    console.log('User chose to not install your PWA');
+  }
+
+  deferredPrompt = null;
+
+  });
+
+ }
+}
+</script>
+</body>
+</html>
