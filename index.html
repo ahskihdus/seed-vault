@@ -6,9 +6,11 @@
 <title>SeedVault</title>
 <link rel='manifest' href='/manifest.json'>
 <link rel="shortcut icon" href="a198cd0c_e2f0_4c99_ba51_342624a24db9_WP4_icon.ico" type="image/x-icon"/>
-<link href = "https://fonts.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+<link href="https://fonts.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+
 <style>
-/* Keeping all original styles and colors (#f56642) */
 * {
   box-sizing: border-box;
   text-align: center;
@@ -44,23 +46,34 @@ h1 {
 }
 </style>
 </head>
-<body>
-<img src = "seed.png" align = "center" class = "center" alt="SeedVault Logo">
 
-<h1><a href = "./"><b>SeedVault</b></a></h1>
+<body>
+
+<div class="header"></div>
+
+<img src="seed.png" align="center" class="center" alt="SeedVault Logo">
+
+<h1><a href="./"><b>SeedVault</b></a></h1>
 <h2>The Digital Archive for Indigenous Languages & Culture</h2>
 <h3>
-    <a href = "seed.html">**Seed**</a> | 
-    <a href = "about.html">**About**</a>
+    <a href="seed.html">**Seed**</a> | 
+    <a href="about.html">**About**</a>
 </h3>
+  
+<div class="login-modal" id="loginModal">
+  <div class="login-box">
+    <h2>Login to SeedVault</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="handleLogin()">Login</button>
+    <div class="alert" id="loginError"></div>
+  </div>
+</div>
 
 <script>
 let deferredPrompt = null;
-
 window.addEventListener('beforeinstallprompt', (e) => {
- // Prevent Chrome 67 and earlier from automatically showing the prompt
  e.preventDefault();
- // Stash the event so it can be triggered later.
  deferredPrompt = e;
 });
 
@@ -69,19 +82,18 @@ async function install() {
   deferredPrompt.prompt();
   console.log(deferredPrompt)
   deferredPrompt.userChoice.then(function(choiceResult){
-
     if (choiceResult.outcome === 'accepted') {
-    console.log('Your PWA has been installed');
-  } else {
-    console.log('User chose to not install your PWA');
-  }
-
-  deferredPrompt = null;
-
+      console.log('Your PWA has been installed');
+    } else {
+      console.log('User chose to not install your PWA');
+    }
+    deferredPrompt = null;
   });
-
  }
 }
 </script>
+
+<script src="js/auth.js" defer></script>
+
 </body>
 </html>
