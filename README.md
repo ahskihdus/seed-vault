@@ -51,6 +51,24 @@ Take screenshots of the terminal test results.
 Save all screenshots in a single PDF named:
 
 ```StudentID_UnitTests_CS3203Fall2025.pdf```
+
+
+# If everrything works, your terminal should look like something similar to this: 
+```
+ PASS  js/auth.test.js
+  Login function (pure logic tests)
+    ✓ ✅ logs in successfully with correct credentials (1 ms)
+    ✓ ❌ fails login with incorrect password
+    ✓ ❌ fails login with incorrect username
+    ✓ ❌ fails login with both invalid username and password
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        0.11 s, estimated 1 s
+Ran all test suites.
+```
+
 # Thanks for reviewing!
 
 
