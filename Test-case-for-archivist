@@ -1,0 +1,180 @@
+import unittest
+import os
+import json
+import hashlib
+from datetime import datetime
+
+# ============================================================
+# 🧩 Mock Archivist Utility Implementations
+# ============================================================
+
+ERROR_INVALID_METADATA = "ERROR: INVALID METADATA"
+ERROR_UNAUTHORIZED_ACCESS = "ERROR: UNAUTHORIZED ACCESS"
+
+# In-memory database simulation
+ARCHIVE_DB = {}
+AUTHORIZED_ROLES = {"ARCHIVIST", "ADMIN"}
+
+# --- 1. Metadata Validation ---
+def validate_metadata(metadata: dict) -> bool:
+    """Check if metadata follows archival requirements."""
+    required_fields = {"title", "language_code", "collector", "date_recorded", "rights"}
+    # All fields must be present
+    if not required_fields.issubset(metadata.keys()):
+        raise ValueError(ERROR_INVALID_METADATA + " - Missing required fields.")
+    # Basic ISO 639-3 check
+    if len(metadata["language_code"]) != 3:
+        raise ValueError(ERROR_INVALID_METADATA + " - Invalid language code length.")
+    # Date format check
+    try:
+        datetime.strptime(metadata["date_recorded"], "%Y-%m-%d")
+    except ValueError:
+        raise ValueError(ERROR_INVALID_METADATA + " - Invalid date format.")
+    return True
+
+
+# --- 2. Data Ingestion ---
+def ingest_record(record: dict) -> str:
+    """Simulate data ingestion into archive."""
+    file_path = record.get("file_path")
+    if not file_path:
+        raise ValueError("Missing file path.")
+    if file_path in ARCHIVE_DB:
+        raise FileExistsError("Duplicate record: file already exists.")
+    # Generate fake record ID
+    record_id = f"REC_{len(ARCHIVE_DB) + 1:04d}"
+    ARCHIVE_DB[file_path] = {"id": record_id, "metadata": record.get("metadata", {})}
+    return record_id
+
+
+# --- 3. Access Control ---
+def check_access_rights(user: dict, resource: str) -> bool:
+    """Check if user has rights to access a given resource."""
+    role = user.get("role", "")
+    if role in AUTHORIZED_ROLES:
+        return True
+    raise PermissionError(ERROR_UNAUTHORIZED_ACCESS + f" - Role '{role}' not authorized.")
+
+
+# --- 4. Preservation: Checksums ---
+def compute_checksum(file_path: str) -> str:
+    """Compute SHA-256 checksum of a file."""
+    with open(file_path, "rb") as f:
+        file_bytes = f.read()
+    return hashlib.sha256(file_bytes).hexdigest()
+
+
+def verify_checksum(file_path: str, checksum: str) -> bool:
+    """Verify file integrity by comparing computed and stored checksums."""
+    return compute_checksum(file_path) == checksum
+
+
+# --- 5. Interoperability / Export ---
+def export_metadata(metadata: dict, format: str = "json") -> str:
+    """Export metadata to supported formats (JSON only for now)."""
+    if format.lower() == "json":
+        return json.dumps(metadata, indent=2)
+    else:
+        raise ValueError("Unsupported export format.")
+
+
+# ============================================================
+# 🧪 Unit Tests for Archivist Tools
+# ============================================================
+
+class TestMetadataValidation(unittest.TestCase):
+
+    def setUp(self):
+        self.valid_metadata = {
+            "title": "Sample Text from Tongan Fieldwork",
+            "language_code": "ton",
+            "collector": "Dr. Le",
+            "date_recorded": "2023-07-10",
+            "rights": "CC-BY-NC 4.0"
+        }
+
+        self.invalid_metadata = {
+            "title": "Unknown Data",
+            "language_code": "xx"
+        }
+
+    def test_valid_metadata_passes(self):
+        self.assertTrue(validate_metadata(self.valid_metadata))
+
+    def test_invalid_metadata_fails(self):
+        with self.assertRaises(ValueError) as context:
+            validate_metadata(self.invalid_metadata)
+        self.assertIn(ERROR_INVALID_METADATA, str(context.exception))
+
+
+class TestDataIngestion(unittest.TestCase):
+
+    def setUp(self):
+        ARCHIVE_DB.clear()
+
+    def test_ingest_creates_archive_entry(self):
+        record = {"file_path": "data/sample.wav", "metadata": {"language_code": "eng"}}
+        entry_id = ingest_record(record)
+        self.assertTrue(entry_id.startswith("REC_"))
+        self.assertIn("data/sample.wav", ARCHIVE_DB)
+
+    def test_duplicate_file_rejected(self):
+        record = {"file_path": "data/sample.wav", "metadata": {"language_code": "eng"}}
+        ingest_record(record)
+        with self.assertRaises(FileExistsError):
+            ingest_record(record)
+
+
+class TestAccessControl(unittest.TestCase):
+
+    def setUp(self):
+        self.archivist_user = {"role": "ARCHIVIST"}
+        self.researcher_user = {"role": "RESEARCHER"}
+
+    def test_archivist_has_full_access(self):
+        allowed = check_access_rights(self.archivist_user, resource="restricted_audio")
+        self.assertTrue(allowed)
+
+    def test_researcher_blocked_from_restricted_data(self):
+        with self.assertRaises(PermissionError) as context:
+            check_access_rights(self.researcher_user, resource="restricted_audio")
+        self.assertIn(ERROR_UNAUTHORIZED_ACCESS, str(context.exception))
+
+
+class TestPreservationIntegrity(unittest.TestCase):
+
+    def setUp(self):
+        self.test_file = "temp_test_file.txt"
+        with open(self.test_file, "w") as f:
+            f.write("sample linguistic data")
+
+    def tearDown(self):
+        if os.path.exists(self.test_file):
+            os.remove(self.test_file)
+
+    def test_checksum_computation_and_verification(self):
+        checksum = compute_checksum(self.test_file)
+        self.assertEqual(len(checksum), 64)  # SHA-256 length
+        verified = verify_checksum(self.test_file, checksum)
+        self.assertTrue(verified)
+
+
+class TestMetadataExport(unittest.TestCase):
+
+    def test_export_to_json_format(self):
+        metadata = {"title": "Hmong Oral History", "language_code": "hmn", "collector": "Dr. Le"}
+        output = export_metadata(metadata, format="json")
+        parsed = json.loads(output)
+        self.assertEqual(parsed["language_code"], "hmn")
+
+    def test_invalid_format_raises_error(self):
+        metadata = {"title": "Invalid Format Test"}
+        with self.assertRaises(ValueError):
+            export_metadata(metadata, format="csv")  # Unsupported
+
+
+# ============================================================
+# ✅ Run tests
+# ============================================================
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
