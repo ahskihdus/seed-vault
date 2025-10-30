@@ -17,8 +17,8 @@ function closeLoginModal() {
 }
 
 function handleLogin() {
-  if (typeof document === "undefined") return; // skip if running in Node (tests)
-  
+  if (typeof document === "undefined") return; // skip in Node
+
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   const errorBox = document.getElementById("loginError");
@@ -27,9 +27,15 @@ function handleLogin() {
 
   if (result.success) {
     localStorage.setItem("loggedInUser", username);
+    localStorage.setItem("role", result.role);
     closeLoginModal();
-    alert("Login successful!");
-    updateUserDisplay();
+
+    if (result.role === "admin") {
+      window.location.href = "admin.html"; // ✅ go to admin landing page
+    } else {
+      alert("Login successful!");
+      updateUserDisplay();
+    }
   } else {
     errorBox.textContent = result.message;
   }
