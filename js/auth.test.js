@@ -3,7 +3,7 @@
  * Pure Node + Jest test file (no jsdom)
  */
 
-const { login } = require('seed-vault/js/auth'); // assumes login() is exported from auth.js
+const { login } = require('../js/auth'); // assumes login() is exported from auth.js
 
 describe('Login function (pure logic tests)', () => {
   test('✅ logs in successfully with correct credentials', () => {
