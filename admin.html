@@ -7,6 +7,15 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+
+  <script>
+  const role = localStorage.getItem("role");
+  if (role !== "admin") {
+    alert("Access denied. Admins only.");
+    window.location.href = "index.html";
+  }
+</script>
+
   <div class="header">
     <h2>SeedVault Admin Portal</h2>
     <a href="#" onclick="logout()">Logout</a>
