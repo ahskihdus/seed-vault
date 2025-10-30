@@ -1,35 +1,50 @@
 // auth.js
 
+// -------------------
+// Browser-side logic
+// -------------------
+
 function openLoginModal() {
-  document.getElementById("loginModal").classList.add("active");
+  if (typeof document !== "undefined") {
+    document.getElementById("loginModal").classList.add("active");
+  }
 }
 
 function closeLoginModal() {
-  document.getElementById("loginModal").classList.remove("active");
+  if (typeof document !== "undefined") {
+    document.getElementById("loginModal").classList.remove("active");
+  }
 }
 
 function handleLogin() {
+  if (typeof document === "undefined") return; // skip if running in Node (tests)
+  
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   const errorBox = document.getElementById("loginError");
 
-  if (username === "admin" && password === "seedvault") {
+  const result = login(username, password);
+
+  if (result.success) {
     localStorage.setItem("loggedInUser", username);
     closeLoginModal();
     alert("Login successful!");
     updateUserDisplay();
   } else {
-    errorBox.textContent = "Invalid credentials. Try again.";
+    errorBox.textContent = result.message;
   }
 }
 
 function handleLogout() {
-  localStorage.removeItem("loggedInUser");
-  alert("Logged out.");
-  updateUserDisplay();
+  if (typeof localStorage !== "undefined") {
+    localStorage.removeItem("loggedInUser");
+  }
+  if (typeof alert !== "undefined") alert("Logged out.");
+  if (typeof document !== "undefined") updateUserDisplay();
 }
 
 function updateUserDisplay() {
+  if (typeof document === "undefined") return; // skip in tests
   const user = localStorage.getItem("loggedInUser");
   const header = document.querySelector(".header");
 
@@ -40,4 +55,23 @@ function updateUserDisplay() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", updateUserDisplay);
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", updateUserDisplay);
+}
+
+
+/**
+ * login() - pure function for authentication
+ * Works in both browser and Node environments.
+ */
+function login(username, password) {
+  if (username === "admin" && password === "seedvault") {
+    return { success: true, role: "admin" };
+  }
+  return { success: false, message: "Invalid credentials" };
+}
+
+// ✅ Export only for Node.js testing
+if (typeof module !== "undefined") {
+  module.exports = { login };
+}
