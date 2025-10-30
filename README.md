@@ -53,7 +53,7 @@ Save all screenshots in a single PDF named:
 ```StudentID_UnitTests_CS3203Fall2025.pdf```
 
 
-# If everrything works, your terminal should look like something similar to this: 
+# If everything works, your terminal should look like something similar to this: 
 ```
  PASS  js/auth.test.js
   Login function (pure logic tests)
