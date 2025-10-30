@@ -1,21 +1,29 @@
-// js/auth.test.js
-const request = require('supertest');
-const app = require('../server/app');
+/**
+ * auth.test.js
+ * Pure Node + Jest test file (no jsdom)
+ */
 
-describe('Login API Tests', () => {
-  test('✅ Should return 200 and success for valid credentials', async () => {
-    const res = await request(app)
-      .post('/login')
-      .send({ username: 'admin', password: '1234' });
-    expect(res.statusCode).toBe(200);
-    expect(res.body.success).toBe(true);
+const { login } = require('../js/auth'); // assumes login() is exported from auth.js
+
+describe('Login function (pure logic tests)', () => {
+  test('✅ logs in successfully with correct credentials', () => {
+    const result = login('admin', 'seedvault');
+    expect(result.success).toBe(true);
+    expect(result.role).toBe('admin');
   });
 
-  test('❌ Should return 401 for invalid credentials', async () => {
-    const res = await request(app)
-      .post('/login')
-      .send({ username: 'wrong', password: 'password' });
-    expect(res.statusCode).toBe(401);
-    expect(res.body.success).toBe(false);
+  test('❌ fails login with incorrect password', () => {
+    const result = login('admin', 'wrongpassword');
+    expect(result.success).toBe(false);
+  });
+
+  test('❌ fails login with incorrect username', () => {
+    const result = login('wronguser', 'seedvault');
+    expect(result.success).toBe(false);
+  });
+
+  test('❌ fails login with both invalid username and password', () => {
+    const result = login('x', 'y');
+    expect(result.success).toBe(false);
   });
 });
