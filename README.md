@@ -1,4 +1,4 @@
-## Testing Shaina’s Word Tagging Tool (Ticket 5)
+## Testing Shaina’s Word Tagging Tool(Instruction for code review) (Ticket 5)
 
 You are in **Shaina’s** Branch for Group C’s Seed Vault product.
 
