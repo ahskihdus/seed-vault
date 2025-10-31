@@ -1,7 +1,7 @@
-# If you're in this location that means you're in Martin's Branch repo and not the main branch for Group C's product. 
+# You are in Martin's Branch repository for Group C's Seed Vault product. 
 Please follow these steps: 
 
- # 1. Open your Terminal and clone this Repo. 
+ # 1. Open your Terminal and clone this repository. 
  ```
 git clone https://github.com/ahskihdus/seed-vault.git
 cd seed-vault
@@ -9,8 +9,8 @@ git checkout Martin-Test-Branch
 ```
 * Make sure you keep this terminal window open! You'll need it for a later step!
 
-# 2. This unit test Requires Python to be installed. 
-  * First, open your terminal and make sure python isn't already installed.
+# 2. This unit test requires Python to be installed. 
+  * In your terminal make sure python isn't already installed by typing the following.
     * ```python3 --version``` on Mac, ```python --version``` on Windows
   * If it's installed, proceed to the next step. Otherwise, watch one of these videos:
     * Mac (only need to watch the first half): https://youtu.be/89eHjZN69Fo?si=Fnlo4QVyc4kUmtF0
