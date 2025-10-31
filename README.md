@@ -1,4 +1,68 @@
-# Language Archive – Seed Vault 
+## Testing Shaina’s Word Tagging Tool (Ticket 5)
+
+You are in **Shaina’s** Branch for Group C’s Seed Vault product.
+
+Please follow these steps:
+
+1. **Open your Terminal and clone this repository:**
+
+git clone https://github.com/ahskihdus/seed-vault.git
+cd seed-vault
+git checkout Shaina-Test-Branch
+
+Keep this terminal window open — you’ll need it later!
+
+2. **This unit test requires Python 3.**
+
+Check if Python is installed:
+- On Mac:
+  ```
+  python3 --version
+  ```
+- On Windows:
+  ```
+  python --version
+  ```
+
+If not installed, follow one of these guides:
+- [Mac Installation Guide](https://youtu.be/89eHjZN69Fo?si=Fnlo4QVyc4kUmtF0)
+- [Windows Installation Guide](https://youtu.be/YKSpANU8jPE?si=PogU7frQWMneWncz)
+
+3. **Run the tests:**
+
+Navigate to the folder containing the files:
+cd TestCode
+
+Then run the following:
+- On Mac:
+  ```
+  python3 test_word_tagging.py
+  ```
+- On Windows:
+  ```
+  python test_word_tagging.py
+  ```
+
+Expected output:
+Ran 8 tests in 0.000s
+OK
+
+If you see this, all tests passed successfully.
+
+---
+
+**Files in this branch:**
+- `wordTagging.js` — Implements Word Tagging Tool logic  
+- `test_word_tagging.py` — Automated unit tests verifying the functionality  
+
+This feature verifies that tagged words can be created, searched, and updated independently of the main system.
+
+---
+
+**Author:**  
+Shaina Patel  
+CS3203 – Fall 2025  
+Ticket 5: Word Tagging Tool# Language Archive – Seed Vault 
 A secure, ethically designed database platform for preserving and providing tiered access to cultural heritage materials. This archive enables Indigenous communities, researchers, and scholars to interact with sensitive materials under strict, role-based governance and protection against unauthorized use and AI-Scoping.  
 
 # Project Vision
