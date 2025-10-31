@@ -156,26 +156,26 @@ if __name__ == "__main__":
 
     try:
         if test_search_results_match_seed():
-            print("✅ Seed match tests passed.")
+            print(" Seed match tests passed.")
     except AssertionError as e:
         overall_ok = False
-        print("❌ Seed match tests failed:", e)
+        print(" Seed match tests failed:", e)
 
     try:
         if test_invalid_inputs_behavior():
-            print("✅ Invalid input tests passed.")
+            print(" Invalid input tests passed.")
     except AssertionError as e:
         overall_ok = False
-        print("❌ Invalid input tests failed:", e)
+        print("Invalid input tests failed:", e)
 
     try:
         if test_nonexistent_items():
-            print("✅ Non-existent item tests passed.")
+            print("Non-existent item tests passed.")
     except AssertionError as e:
         overall_ok = False
-        print("❌ Non-existent item tests failed:", e)
+        print("Non-existent item tests failed:", e)
 
     if overall_ok:
-        print("\n🎉 ALL TESTS PASSED (direct run).")
+        print("\n ALL TESTS PASSED (direct run).")
     else:
-        print("\n⚠️ Some tests failed — check the printed failures above.")
+        print("\n Some tests failed — check the printed failures above.")
