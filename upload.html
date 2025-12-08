@@ -6,13 +6,22 @@
   <title>SeedVault - Upload Artifact</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
+    body {
+      background-color: #e1d7c6;
+    }
+    
     .upload-container {
       max-width: 800px;
       margin: 50px auto;
       padding: 2rem;
-      background: #fff;
+      background: #ffffff;
       border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(40, 29, 5, 0.15);
+      border: 2px solid #b1aca2;
+    }
+    
+    .upload-container h1 {
+      color: #281d05;
     }
     
     .upload-form {
@@ -29,16 +38,26 @@
     .form-group label {
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: #333;
+      color: #281d05;
     }
     
     .form-group input,
     .form-group textarea,
     .form-group select {
       padding: 0.8rem;
-      border: 1px solid #ddd;
+      border: 2px solid #b1aca2;
       border-radius: 0.5rem;
       font-size: 1rem;
+      background: #e1d7c6;
+      color: #281d05;
+      transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #0f6939;
     }
     
     .file-input-wrapper {
@@ -56,50 +75,55 @@
     .file-input-label {
       display: block;
       padding: 1rem;
-      background: #f5f5f5;
-      border: 2px dashed #ddd;
+      background: #e1d7c6;
+      border: 2px dashed #865e0d;
       border-radius: 0.5rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s;
+      color: #281d05;
     }
     
     .file-input-label:hover {
-      background: #e8e8e8;
-      border-color: #1a73e8;
+      background: #b1aca2;
+      border-color: #0f6939;
     }
     
     .file-info {
       margin-top: 1rem;
       padding: 0.8rem;
-      background: #e3f2fd;
+      background: #e1d7c6;
       border-radius: 0.5rem;
       display: none;
+      border-left: 4px solid #0f6939;
+      color: #281d05;
     }
     
     .allowed-types {
       font-size: 0.9rem;
-      color: #666;
+      color: #3b2a19;
       margin-top: 0.5rem;
     }
     
     .submit-btn {
       padding: 1rem;
-      background: #1a73e8;
-      color: #fff;
+      background: #0f6939;
+      color: #ffffff;
       border: none;
       border-radius: 0.5rem;
       font-size: 1.1rem;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
+      font-weight: 600;
     }
     
     .submit-btn:hover {
-      background: #1557b0;
+      background: #0d512d;
+      transform: translateY(-2px);
     }
     
     .submit-btn:disabled {
-      background: #ccc;
+      background: #b1aca2;
       cursor: not-allowed;
     }
     
@@ -108,40 +132,45 @@
       border-radius: 0.5rem;
       margin-top: 1rem;
       display: none;
+      border-left: 4px solid;
     }
     
     .message.success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+      background: #e1d7c6;
+      color: #0d512d;
+      border-color: #0f6939;
     }
     
     .message.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+      background: #e1d7c6;
+      color: #3b2a19;
+      border-color: #865e0d;
     }
     
     .permission-warning {
-      background: #fff3cd;
-      color: #856404;
+      background: #e1d7c6;
+      color: #3b2a19;
       padding: 1rem;
       border-radius: 0.5rem;
       margin-bottom: 1rem;
-      border: 1px solid #ffeeba;
+      border: 2px solid #865e0d;
     }
     
     .security-info {
-      background: #e7f3ff;
+      background: #e1d7c6;
       padding: 1.5rem;
       border-radius: 0.5rem;
       margin-top: 2rem;
-      border-left: 4px solid #1a73e8;
+      border-left: 4px solid #0f6939;
     }
     
     .security-info h3 {
       margin-top: 0;
-      color: #1a73e8;
+      color: #0d512d;
+    }
+    
+    .security-info p, .security-info ul {
+      color: #281d05;
     }
     
     .security-info ul {
