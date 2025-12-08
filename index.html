@@ -16,11 +16,16 @@
   text-align: center;
 }
 a {
-  color: #f56642;
+  color: #0f6939;
+  transition: color 0.3s;
+}
+a:hover {
+  color: #865e0d;
 }
 h3, h2, p {
   font-family: 'Nunito Sans', sans-serif;
   text-align: center;
+  color: #281d05;
 }
 h1:hover {
   animation-name: artshadow;
@@ -31,10 +36,10 @@ h1:hover {
 }
 @keyframes artshadow {
   from {}
-  to {text-shadow: 2px 2px 5px black;}
+  to {text-shadow: 2px 2px 5px rgba(134, 94, 13, 0.5);}
 }
 h1 {
-  color: #f56642;
+  color: #0d512d;
   font-family: 'Nunito Sans', sans-serif;
   font-weight: 900;
 }
@@ -43,6 +48,9 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   width: 20%;
+}
+body {
+  background-color: #e1d7c6;
 }
 </style>
 </head>
