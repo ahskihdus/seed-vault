@@ -33,10 +33,10 @@ All data and cultural content stored within the archive remains the intellectual
 
 # Credits 
 The following people are working as developers and maintainers on the current version: 
--   Destiny Ngigi  
--   Kiara Nelson 
--   Thrisha Duggisetty 
--   Sudhiksha Sadige 
--   Martin Goff 
--   Colin Le 
+-   Thrisha Duggisetty
+-   Martin Goff
+-   Colin Le
+-   Kiara Nelson
+-   Destiny Ngigi
 -   Shaina Patel
+-   Sudhiksha Sadige
