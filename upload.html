@@ -256,7 +256,13 @@
         <li>MIME type verification - ensures file content matches extension</li>
         <li>Role-based access control - files stored according to access level</li>
         <li>Audit logging - all uploads are tracked and logged</li>
+        <li><strong>🤖 AI Detection - AI-generated content is automatically detected and rejected</strong></li>
       </ul>
+      <p style="margin-top: 1rem;">
+        <strong>Why AI Detection?</strong> SeedVault is dedicated to preserving authentic 
+        cultural heritage materials. AI-generated content does not represent genuine 
+        indigenous knowledge, traditions, or cultural practices.
+      </p>
     </div>
   </div>
 
@@ -328,7 +334,7 @@
         
         if (result.success) {
           message.className = 'message success';
-          message.textContent = 'File uploaded successfully! Your artifact has been added to the archive.';
+          message.textContent = '✅ File uploaded successfully! Your artifact has been added to the archive.';
           message.style.display = 'block';
           
           // Reset form
@@ -336,15 +342,27 @@
           fileInfo.style.display = 'none';
         } else {
           message.className = 'message error';
-          message.textContent = `Upload failed: ${result.message}`;
-          if (result.errors) {
-            message.textContent += '\n' + result.errors.join(', ');
+          
+          // Check if AI detection rejection
+          if (result.reason && result.reason.includes('AI-generated')) {
+            message.innerHTML = `
+              <strong>🤖 Upload Rejected: AI-Generated Content Detected</strong><br><br>
+              ${result.details || 'Your submission appears to contain AI-generated material.'}<br><br>
+              <em>SeedVault preserves authentic cultural heritage. Please upload only genuine 
+              cultural materials, traditional knowledge, or human-created content.</em>
+            `;
+          } else {
+            message.textContent = `❌ Upload failed: ${result.message}`;
+            if (result.errors) {
+              message.textContent += '\n' + result.errors.join(', ');
+            }
           }
+          
           message.style.display = 'block';
         }
       } catch (error) {
         message.className = 'message error';
-        message.textContent = `Upload error: ${error.message}`;
+        message.textContent = `❌ Upload error: ${error.message}`;
         message.style.display = 'block';
       } finally {
         submitBtn.disabled = false;
