@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>View Artifact - SeedVault</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background-color: #e1d7c6;
+    }
+    
+    .artifact-container {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 2rem;
+    }
+    
+    .artifact-card {
+      background: #ffffff;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(40, 29, 5, 0.15);
+      border: 2px solid #b1aca2;
+      margin-bottom: 2rem;
+    }
+    
+    .artifact-header {
+      border-bottom: 2px solid #b1aca2;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .artifact-title {
+      color: #0d512d;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+    
+    .artifact-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      color: #3b2a19;
+      font-size: 0.95rem;
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .meta-label {
+      font-weight: 600;
+      color: #281d05;
+    }
+    
+    .artifact-description {
+      background: #e1d7c6;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid #0f6939;
+    }
+    
+    .artifact-content {
+      margin-top: 2rem;
+    }
+    
+    .content-viewer {
+      background: #ffffff;
+      border: 2px solid #b1aca2;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .content-viewer img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+    }
+    
+    .content-viewer audio,
+    .content-viewer video {
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    .content-viewer iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    
+    .download-section {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    
+    .download-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: #0f6939;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background 0.3s, transform 0.2s;
+    }
+    
+    .download-btn:hover {
+      background: #0d512d;
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #0f6939;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .back-link:hover {
+      color: #865e0d;
+    }
+    
+    .access-denied {
+      background: #e1d7c6;
+      border: 2px solid #865e0d;
+      padding: 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      color: #3b2a19;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 3rem;
+      color: #3b2a19;
+      font-size: 1.2rem;
+    }
+    
+    .error-message {
+      background: #e1d7c6;
+      border: 2px solid #865e0d;
+      padding: 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      color: #3b2a19;
+    }
+    
+    .file-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    .text-preview {
+      text-align: left;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: monospace;
+      background: #e1d7c6;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .badge-public {
+      background: #0f6939;
+      color: #ffffff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.3rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .badge-tribe1 {
+      background: #865e0d;
+      color: #ffffff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.3rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .badge-tribe2 {
+      background: #3b2a19;
+      color: #e1d7c6;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.3rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .badge-tribe3 {
+      background: #281d05;
+      color: #e1d7c6;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.3rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>SeedVault</h2>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+  <div class="artifact-container">
+    <a href="seed.html" class="back-link">← Back to Archive</a>
+    
+    <div id="loadingMessage" class="loading-spinner">
+      Loading artifact...
+    </div>
+    
+    <div id="artifactContent" style="display: none;">
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <h1 class="artifact-title" id="artifactTitle"></h1>
+          <div class="artifact-meta">
+            <div class="meta-item">
+              <span class="meta-label">Uploaded by:</span>
+              <span id="uploadedBy"></span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Date:</span>
+              <span id="uploadDate"></span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Type:</span>
+              <span id="fileType"></span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Access Level:</span>
+              <span id="accessLevel"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="artifact-description" id="descriptionSection" style="display: none;">
+          <h3 style="margin-top: 0; color: #0d512d;">Description</h3>
+          <p id="artifactDescription"></p>
+        </div>
+        
+        <div class="artifact-content">
+          <h3 style="color: #0d512d; margin-bottom: 1rem;">Content</h3>
+          <div class="content-viewer" id="contentViewer">
+            <!-- Dynamic content loaded here -->
+          </div>
+        </div>
+        
+        <div class="download-section">
+          <a href="#" id="downloadBtn" class="download-btn" download>
+            📥 Download Artifact
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div id="accessDenied" class="access-denied" style="display: none;">
+      <h2>🔒 Access Denied</h2>
+      <p>You do not have permission to view this artifact.</p>
+      <a href="seed.html" class="download-btn" style="margin-top: 1rem;">Return to Archive</a>
+    </div>
+    
+    <div id="errorMessage" class="error-message" style="display: none;">
+      <h2>❌ Error</h2>
+      <p id="errorText"></p>
+      <a href="seed.html" class="download-btn" style="margin-top: 1rem;">Return to Archive</a>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    let currentArtifact = null;
+    
+    window.addEventListener('load', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const artifactId = urlParams.get('id');
+      
+      if (!artifactId) {
+        showError('No artifact specified');
+        return;
+      }
+      
+      await loadArtifact(artifactId);
+    });
+    
+    async function loadArtifact(artifactId) {
+      try {
+        const role = localStorage.getItem('role') || 'guest';
+        
+        // Fetch artifact metadata
+        const response = await fetch(`http://localhost:3000/api/files?role=${role}`);
+        const data = await response.json();
+        
+        if (!data.success) {
+          showError('Failed to load artifact data');
+          return;
+        }
+        
+        // Find the specific artifact
+        const artifact = data.files.find(a => a.id === artifactId);
+        
+        if (!artifact) {
+          showError('Artifact not found');
+          return;
+        }
+        
+        currentArtifact = artifact;
+        
+        // Check access permission
+        const accessLevel = artifact.accessLevel || artifact.access_level;
+        if (!canAccessArtifact(role, accessLevel)) {
+          showAccessDenied();
+          return;
+        }
+        
+        // Display artifact
+        displayArtifact(artifact);
+        
+      } catch (error) {
+        console.error('Error loading artifact:', error);
+        showError('Failed to load artifact: ' + error.message);
+      }
+    }
+    
+    function canAccessArtifact(userRole, artifactAccess) {
+      if (userRole === 'admin') return true;
+      if (artifactAccess === 'public') return true;
+      if (userRole === artifactAccess) return true;
+      return false;
+    }
+    
+    function displayArtifact(artifact) {
+      // Set title
+      document.getElementById('artifactTitle').textContent = 
+        artifact.title || artifact.originalName || artifact.original_name;
+      
+      // Set metadata
+      const uploaderName = artifact.uploadedBy || artifact.uploaded_by_name || 'Unknown';
+      document.getElementById('uploadedBy').textContent = uploaderName;
+      
+      const uploadDate = artifact.uploadDate || artifact.upload_date;
+      const date = new Date(uploadDate);
+      document.getElementById('uploadDate').textContent = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const mimetype = artifact.mimetype || '';
+      let fileType = 'Document';
+      if (mimetype.startsWith('image/')) fileType = 'Image';
+      else if (mimetype.startsWith('audio/')) fileType = 'Audio';
+      else if (mimetype.startsWith('video/')) fileType = 'Video';
+      else if (mimetype.includes('pdf')) fileType = 'PDF';
+      document.getElementById('fileType').textContent = fileType;
+      
+      const accessLevel = artifact.accessLevel || artifact.access_level;
+      document.getElementById('accessLevel').innerHTML = 
+        `<span class="badge badge-${accessLevel}">${accessLevel.toUpperCase()}</span>`;
+      
+      // Set description if available
+      if (artifact.description) {
+        document.getElementById('artifactDescription').textContent = artifact.description;
+        document.getElementById('descriptionSection').style.display = 'block';
+      }
+      
+      // Display content based on type
+      displayContent(artifact);
+      
+      // Set download link
+      const filename = artifact.filename;
+      const downloadUrl = `http://localhost:3000/api/file/${accessLevel}/${filename}?userRole=${localStorage.getItem('role')}`;
+      document.getElementById('downloadBtn').href = downloadUrl;
+      document.getElementById('downloadBtn').download = artifact.originalName || artifact.original_name || filename;
+      
+      // Show content
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('artifactContent').style.display = 'block';
+    }
+    
+    function displayContent(artifact) {
+      const viewer = document.getElementById('contentViewer');
+      const mimetype = artifact.mimetype || '';
+      const filename = artifact.filename;
+      const accessLevel = artifact.accessLevel || artifact.access_level;
+      const role = localStorage.getItem('role');
+      const fileUrl = `http://localhost:3000/api/file/${accessLevel}/${filename}?userRole=${role}`;
+      
+      if (mimetype.startsWith('image/')) {
+        // Display image
+        viewer.innerHTML = `<img src="${fileUrl}" alt="${artifact.title || 'Artifact image'}" />`;
+        
+      } else if (mimetype.startsWith('audio/')) {
+        // Display audio player
+        viewer.innerHTML = `
+          <div style="text-align: center; width: 100%;">
+            <div class="file-icon">🎵</div>
+            <audio controls>
+              <source src="${fileUrl}" type="${mimetype}">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        `;
+        
+      } else if (mimetype.startsWith('video/')) {
+        // Display video player
+        viewer.innerHTML = `
+          <video controls style="max-width: 100%; height: auto;">
+            <source src="${fileUrl}" type="${mimetype}">
+            Your browser does not support the video element.
+          </video>
+        `;
+        
+      } else if (mimetype === 'application/pdf') {
+        // Display PDF
+        viewer.innerHTML = `<iframe src="${fileUrl}"></iframe>`;
+        
+      } else if (mimetype === 'text/plain') {
+        // Display text content
+        fetch(fileUrl)
+          .then(response => response.text())
+          .then(text => {
+            viewer.innerHTML = `
+              <div style="width: 100%;">
+                <div class="file-icon">📄</div>
+                <div class="text-preview">${escapeHtml(text)}</div>
+              </div>
+            `;
+          })
+          .catch(error => {
+            viewer.innerHTML = `
+              <div style="text-align: center;">
+                <div class="file-icon">📄</div>
+                <p>Text file available for download</p>
+              </div>
+            `;
+          });
+        
+      } else {
+        // Generic file - show download option
+        viewer.innerHTML = `
+          <div style="text-align: center;">
+            <div class="file-icon">📁</div>
+            <p style="color: #3b2a19; margin-top: 1rem;">
+              This file type cannot be previewed in the browser.<br>
+              Please download to view.
+            </p>
+          </div>
+        `;
+      }
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    function showAccessDenied() {
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('accessDenied').style.display = 'block';
+    }
+    
+    function showError(message) {
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('errorMessage').style.display = 'block';
+      document.getElementById('errorText').textContent = message;
+    }
+    
+    function logout() {
+      handleLogout();
+    }
+  </script>
+</body>
+</html>
