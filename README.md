@@ -49,7 +49,7 @@ sudo systemctl start mysql
 npm install
 ```
 
-## 5. CREATE MYSQL DATABASE (copy and paste all of this)
+## 5. CREATE MYSQL DATABASE
 ```
 mysql -u root << EOF
 CREATE DATABASE seedvault;
