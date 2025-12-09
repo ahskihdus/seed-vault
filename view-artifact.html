@@ -399,11 +399,7 @@
       // Display content based on type
       displayContent(artifact);
       
-      // Set download link
-      const filename = artifact.filename;
-      const downloadUrl = `http://localhost:3000/api/file/${accessLevel}/${filename}?userRole=${localStorage.getItem('role')}`;
-      document.getElementById('downloadBtn').href = downloadUrl;
-      document.getElementById('downloadBtn').download = artifact.originalName || artifact.original_name || filename;
+      
       
       // Show content
       document.getElementById('loadingMessage').style.display = 'none';
