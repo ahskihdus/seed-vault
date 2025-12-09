@@ -188,11 +188,11 @@ async function detectAIContent(text) {
     
     // Flag as AI if:
     // 1. Model explicitly classifies as AI/Fake, OR
-    // 2. Combined score exceeds 0.55, OR
-    // 3. Heuristic score alone is high (>0.50 = 50 points = multiple strong indicators)
+    // 2. Combined score >= 0.50, OR
+    // 3. Heuristic score alone >= 0.50 (50+ points = multiple strong indicators)
     const flaggedByAI = isAI;
-    const flaggedByCombined = combinedConfidence > 0.55;
-    const flaggedByHeuristic = heuristicScore > 0.50;
+    const flaggedByCombined = combinedConfidence >= 0.50;
+    const flaggedByHeuristic = heuristicScore >= 0.50;
     const finalIsAI = flaggedByAI || flaggedByCombined || flaggedByHeuristic;
     
     // Use highest relevant score for confidence
@@ -286,8 +286,8 @@ async function validateUpload(file, description) {
       console.log('[AI DETECTOR] Analyzing description...');
       const descResult = await detectAIContent(description);
       
-      // Reject if AI-generated (combined score > 0.55)
-      if (descResult.isAI && descResult.confidence > 0.55) {
+      // Reject if AI-generated (score >= 0.50)
+      if (descResult.isAI && descResult.confidence >= 0.50) {
         console.log(`[AI DETECTOR] ❌ REJECTED - Description flagged as AI (${(descResult.confidence * 100).toFixed(1)}% confidence)`);
         return {
           passed: false,
@@ -310,8 +310,8 @@ async function validateUpload(file, description) {
       console.log('[AI DETECTOR] Analyzing file content...');
       const contentResult = await detectAIContent(fileText);
       
-      // Reject if AI-generated (combined score > 0.55)
-      if (contentResult.isAI && contentResult.confidence > 0.55) {
+      // Reject if AI-generated (score >= 0.50)
+      if (contentResult.isAI && contentResult.confidence >= 0.50) {
         console.log(`[AI DETECTOR] ❌ REJECTED - File content flagged as AI (${(contentResult.confidence * 100).toFixed(1)}% confidence)`);
         return {
           passed: false,
