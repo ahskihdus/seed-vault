@@ -282,6 +282,16 @@
     let currentArtifact = null;
     
     window.addEventListener('load', async () => {
+      // Check if user is logged in
+      const role = localStorage.getItem('role');
+      const username = localStorage.getItem('loggedInUser');
+      
+      if (!username || !role) {
+        alert('Please log in to view artifacts');
+        window.location.href = 'index.html';
+        return;
+      }
+      
       const urlParams = new URLSearchParams(window.location.search);
       const artifactId = urlParams.get('id');
       
@@ -290,6 +300,7 @@
         return;
       }
       
+      console.log('Loading artifact:', artifactId, 'for user:', username, 'role:', role);
       await loadArtifact(artifactId);
     });
     
@@ -297,23 +308,34 @@
       try {
         const role = localStorage.getItem('role') || 'guest';
         
+        console.log('Fetching artifacts for role:', role);
+        
         // Fetch artifact metadata
         const response = await fetch(`http://localhost:3000/api/files?role=${role}`);
         const data = await response.json();
+        
+        console.log('API response:', data);
         
         if (!data.success) {
           showError('Failed to load artifact data');
           return;
         }
         
-        // Find the specific artifact
-        const artifact = data.files.find(a => a.id === artifactId);
+        console.log('Looking for artifact with id:', artifactId);
+        console.log('Available artifacts:', data.files);
+        
+        // Find the specific artifact (check both id and filename)
+        const artifact = data.files.find(a => 
+          a.id === artifactId || 
+          a.filename === artifactId
+        );
         
         if (!artifact) {
-          showError('Artifact not found');
+          showError('Artifact not found. ID: ' + artifactId);
           return;
         }
         
+        console.log('Found artifact:', artifact);
         currentArtifact = artifact;
         
         // Check access permission
