@@ -5,18 +5,26 @@ let classifier = null;
 
 /**
  * Initialize the AI detection model (lazy loading)
- * Uses RoBERTa model specifically trained to detect GPT-2 generated text
+ * Uses better AI detection model
  */
 async function initClassifier() {
   if (!classifier) {
     console.log('[AI DETECTOR] Loading AI detection model...');
     console.log('[AI DETECTOR] This may take 10-30 seconds on first load...');
     
-    // Using proper GPT detection model
-    classifier = await pipeline(
-      'text-classification',
-      'Xenova/roberta-base-openai-detector'
-    );
+    // Using GPT-3.5 Detector model - better at detecting modern AI
+    try {
+      classifier = await pipeline(
+        'text-classification',
+        'Xenova/albert-base-v2-finetuned-ai-generated-text'
+      );
+    } catch (e) {
+      console.log('[AI DETECTOR] Falling back to RoBERTa detector...');
+      classifier = await pipeline(
+        'text-classification',
+        'Xenova/roberta-base-openai-detector'
+      );
+    }
     
     console.log('[AI DETECTOR] Model loaded successfully');
   }
@@ -24,9 +32,107 @@ async function initClassifier() {
 }
 
 /**
+ * Heuristic analysis for AI writing patterns
+ * @param {string} text - Text to analyze
+ * @returns {Object} - AI indicators and score
+ */
+function analyzeWritingPatterns(text) {
+  const indicators = {
+    score: 0,
+    flags: []
+  };
+  
+  // 1. Check for AI filler phrases
+  const aiPhrases = [
+    'comprehensive synthesis',
+    'multifaceted approach',
+    'in examining',
+    'furthermore,',
+    'moreover,',
+    'in conclusion',
+    'it is important to note',
+    'as a matter of fact',
+    'intricate interplay',
+    'nuanced complexities',
+    'fundamental paradigms',
+    'systematic implementation',
+    'profound significance',
+    'diverse perspectives',
+    'simultaneously acknowledging',
+    'cross-cultural knowledge',
+    'ancestral craftsmanship',
+    'elucidates the',
+    'seamlessly integrate',
+    'innovative approach',
+    'cutting-edge technology',
+    'revolutionary method'
+  ];
+  
+  const lowerText = text.toLowerCase();
+  let phraseCount = 0;
+  aiPhrases.forEach(phrase => {
+    const matches = lowerText.split(phrase).length - 1;
+    phraseCount += matches;
+  });
+  
+  if (phraseCount > 3) {
+    indicators.score += 25;
+    indicators.flags.push(`Heavy use of filler phrases (${phraseCount} detected)`);
+  }
+  
+  // 2. Check sentence complexity (very complex = suspicious)
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const avgWordsPerSentence = text.split(/\s+/).length / sentences.length;
+  if (avgWordsPerSentence > 25) {
+    indicators.score += 15;
+    indicators.flags.push(`Unusually long sentences (avg ${avgWordsPerSentence.toFixed(1)} words)`);
+  }
+  
+  // 3. Check for passive voice overuse
+  const passivePatterns = /\b(is|are|was|were)\s+\w+ed\b/gi;
+  const passiveCount = (text.match(passivePatterns) || []).length;
+  const passiveRatio = passiveCount / sentences.length;
+  if (passiveRatio > 0.4) {
+    indicators.score += 20;
+    indicators.flags.push(`Excessive passive voice (${(passiveRatio * 100).toFixed(1)}% of sentences)`);
+  }
+  
+  // 4. Check vocabulary repetition
+  const words = text.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
+  const uniqueWords = new Set(words);
+  const vocabularyDiversity = uniqueWords.size / words.length;
+  if (vocabularyDiversity > 0.7 && text.length > 300) {
+    indicators.score += 10;
+    indicators.flags.push(`Very high vocabulary diversity (possible overuse of thesaurus)`);
+  }
+  
+  // 5. Check for overuse of hedging language
+  const hedgingPhrases = ['arguably', 'it could be argued', 'in some sense', 'somewhat', 'relatively', 'quite', 'fairly'];
+  const hedgingCount = hedgingPhrases.filter(phrase => 
+    lowerText.includes(phrase)
+  ).length;
+  if (hedgingCount > 2) {
+    indicators.score += 10;
+    indicators.flags.push(`Multiple hedging phrases detected`);
+  }
+  
+  // 6. Check for repetitive structure
+  const sentenceStarts = sentences.map(s => s.trim().split(/\s+/)[0]);
+  const repeatedStarts = sentenceStarts.filter(
+    (start, idx) => sentenceStarts.indexOf(start) !== idx
+  ).length;
+  if (repeatedStarts > 2) {
+    indicators.score += 10;
+    indicators.flags.push(`Repetitive sentence structures`);
+  }
+  
+  return indicators;
+}
+
+/**
  * Detect if text content is AI-generated
  * @param {string} text - Text content to analyze
- * @returns {Promise<{isAI: boolean, confidence: number, label: string}>}
+ * @returns {Promise<{isAI: boolean, confidence: number, label: string, analysis: Object}>}
  */
 async function detectAIContent(text) {
   try {
@@ -40,50 +146,60 @@ async function detectAIContent(text) {
       };
     }
 
+    // STEP 1: Heuristic Analysis
+    const heuristicAnalysis = analyzeWritingPatterns(text);
+    const heuristicScore = heuristicAnalysis.score / 100;
+    
+    console.log('[AI DETECTOR] Heuristic Analysis:', {
+      score: heuristicAnalysis.score,
+      flags: heuristicAnalysis.flags
+    });
+    
     // Initialize classifier
     const model = await initClassifier();
     
     // Truncate text if too long (model limit ~512 tokens)
     const truncatedText = text.substring(0, 2000);
     
-    // Run detection
+    // STEP 2: Model-based Detection
     const result = await model(truncatedText);
     
-    console.log('[AI DETECTOR] Analysis result:', result);
+    console.log('[AI DETECTOR] Model Analysis result:', result);
     
-    // Parse result
-    // RoBERTa OpenAI detector returns:
-    // - label: "Real" or "Fake" (Fake = AI-generated)
-    // - score: confidence (0-1)
-    
+    let modelScore = 0;
     let isAI = false;
-    let confidence = 0;
     let label = 'UNKNOWN';
     
     if (Array.isArray(result) && result.length > 0) {
-      // Get the prediction with highest score
       const predictions = result.sort((a, b) => b.score - a.score);
       const topPrediction = predictions[0];
       
       label = topPrediction.label;
-      confidence = topPrediction.score;
+      modelScore = topPrediction.score;
       
-      // Check if labeled as Fake/AI-generated
       isAI = (label.toLowerCase() === 'fake' || 
               label.toLowerCase().includes('ai') || 
               label.toLowerCase().includes('generated'));
-              
-      console.log('[AI DETECTOR] Detection:', {
-        label: label,
-        confidence: (confidence * 100).toFixed(1) + '%',
-        isAI: isAI
-      });
     }
     
+    // STEP 3: Combine scores (weighted average)
+    // 60% model + 40% heuristic
+    const combinedConfidence = (modelScore * 0.6) + (heuristicScore * 0.4);
+    
+    console.log('[AI DETECTOR] Combined Detection:', {
+      modelScore: (modelScore * 100).toFixed(1) + '%',
+      heuristicScore: (heuristicAnalysis.score) + '%',
+      combinedConfidence: (combinedConfidence * 100).toFixed(1) + '%',
+      isAI: isAI || combinedConfidence > 0.55
+    });
+    
     return {
-      isAI: isAI,
-      confidence: confidence,
+      isAI: isAI || combinedConfidence > 0.55,
+      confidence: combinedConfidence,
       label: label,
+      modelScore: modelScore,
+      heuristicScore: heuristicScore,
+      heuristicFlags: heuristicAnalysis.flags,
       rawResult: result
     };
     
@@ -154,19 +270,21 @@ async function validateUpload(file, description) {
       console.log('[AI DETECTOR] Analyzing description...');
       const descResult = await detectAIContent(description);
       
-      // Reject if AI-generated with high confidence
-      if (descResult.isAI && descResult.confidence > 0.7) {
+      // Reject if AI-generated (combined score > 0.55)
+      if (descResult.isAI && descResult.confidence > 0.55) {
         console.log(`[AI DETECTOR] ❌ REJECTED - Description flagged as AI (${(descResult.confidence * 100).toFixed(1)}% confidence)`);
         return {
           passed: false,
           reason: 'Description appears to be AI-generated',
           details: {
             confidence: (descResult.confidence * 100).toFixed(1) + '%',
-            classification: descResult.label
+            modelScore: (descResult.modelScore * 100).toFixed(1) + '%',
+            heuristicScore: descResult.heuristicScore * 100 + '%',
+            flags: descResult.heuristicFlags
           }
         };
       } else {
-        console.log(`[AI DETECTOR] ✅ Description appears human-written (${descResult.label}, ${(descResult.confidence * 100).toFixed(1)}%)`);
+        console.log(`[AI DETECTOR] ✅ Description appears authentic (${(descResult.confidence * 100).toFixed(1)}% confidence)`);
       }
     }
     
@@ -176,19 +294,21 @@ async function validateUpload(file, description) {
       console.log('[AI DETECTOR] Analyzing file content...');
       const contentResult = await detectAIContent(fileText);
       
-      // Reject if AI-generated with high confidence
-      if (contentResult.isAI && contentResult.confidence > 0.7) {
+      // Reject if AI-generated (combined score > 0.55)
+      if (contentResult.isAI && contentResult.confidence > 0.55) {
         console.log(`[AI DETECTOR] ❌ REJECTED - File content flagged as AI (${(contentResult.confidence * 100).toFixed(1)}% confidence)`);
         return {
           passed: false,
           reason: 'File content appears to be AI-generated',
           details: {
             confidence: (contentResult.confidence * 100).toFixed(1) + '%',
-            classification: contentResult.label
+            modelScore: (contentResult.modelScore * 100).toFixed(1) + '%',
+            heuristicScore: contentResult.heuristicScore * 100 + '%',
+            flags: contentResult.heuristicFlags
           }
         };
       } else {
-        console.log(`[AI DETECTOR] ✅ File content appears human-written (${contentResult.label}, ${(contentResult.confidence * 100).toFixed(1)}%)`);
+        console.log(`[AI DETECTOR] ✅ File content appears authentic (${(contentResult.confidence * 100).toFixed(1)}% confidence)`);
       }
     }
     
