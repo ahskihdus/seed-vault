@@ -1,4 +1,4 @@
-// server/app.js - Updated with secure upload integration
+// server/app.js - Updated with secure upload integration and AI detection
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -6,6 +6,7 @@ const cors = require('cors');
 const multer = require('multer');
 const crypto = require('crypto');
 const fs = require('fs');
+const aiDetector = require('./aiDetector'); // NEW: Import AI detector
 
 const app = express();
 app.use(cors());
@@ -148,8 +149,8 @@ const upload = multer({
   }
 });
 
-// Upload endpoint
-app.post('/api/upload', upload.single('file'), (req, res) => {
+// Upload endpoint with AI detection
+app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
     const { username, role, title, description, tribe, accessLevel } = req.body;
     
@@ -187,6 +188,28 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
       });
     }
     
+    // ⭐ NEW: AI Detection Check
+    console.log('[UPLOAD] Running AI detection...');
+    const aiCheck = await aiDetector.validateUpload(req.file, description);
+    
+    if (!aiCheck.passed) {
+      // Delete uploaded file
+      fs.unlinkSync(req.file.path);
+      
+      console.log(`[UPLOAD REJECTED] AI content detected for user: ${username}`);
+      
+      return res.status(400).json({
+        success: false,
+        message: "Upload rejected: AI-generated content detected",
+        reason: aiCheck.reason,
+        details: "SeedVault preserves authentic cultural heritage. " +
+                 "AI-generated materials are not permitted to maintain " +
+                 "the integrity of indigenous knowledge and traditions."
+      });
+    }
+    
+    console.log('[UPLOAD] AI detection passed');
+    
     // Create metadata record
     const metadata = {
       id: crypto.randomBytes(8).toString('hex'),
@@ -201,7 +224,8 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
       uploadedBy: username,
       uploadedByRole: role,
       uploadDate: new Date().toISOString(),
-      path: req.file.path
+      path: req.file.path,
+      aiValidated: true // NEW: Mark as AI validated
     };
     
     // Save metadata to JSON file (in production, use database)
@@ -330,6 +354,7 @@ if (require.main === module) {
     console.log('✅ SeedVault Server running on http://localhost:3000');
     console.log('📁 File uploads directory: ./uploads');
     console.log('🔒 Security features enabled (CWE-434 mitigation)');
+    console.log('🤖 AI detection enabled');
   });
 }
 
