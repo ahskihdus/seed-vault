@@ -75,16 +75,16 @@ function analyzeWritingPatterns(text) {
     phraseCount += matches;
   });
   
-  if (phraseCount > 3) {
-    indicators.score += 25;
+  if (phraseCount > 2) {
+    indicators.score += 35;
     indicators.flags.push(`Heavy use of filler phrases (${phraseCount} detected)`);
   }
   
   // 2. Check sentence complexity (very complex = suspicious)
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
   const avgWordsPerSentence = text.split(/\s+/).length / sentences.length;
-  if (avgWordsPerSentence > 25) {
-    indicators.score += 15;
+  if (avgWordsPerSentence > 20) {
+    indicators.score += 20;
     indicators.flags.push(`Unusually long sentences (avg ${avgWordsPerSentence.toFixed(1)} words)`);
   }
   
@@ -92,7 +92,7 @@ function analyzeWritingPatterns(text) {
   const passivePatterns = /\b(is|are|was|were)\s+\w+ed\b/gi;
   const passiveCount = (text.match(passivePatterns) || []).length;
   const passiveRatio = passiveCount / sentences.length;
-  if (passiveRatio > 0.4) {
+  if (passiveRatio > 0.3) {
     indicators.score += 20;
     indicators.flags.push(`Excessive passive voice (${(passiveRatio * 100).toFixed(1)}% of sentences)`);
   }
@@ -101,8 +101,8 @@ function analyzeWritingPatterns(text) {
   const words = text.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
   const uniqueWords = new Set(words);
   const vocabularyDiversity = uniqueWords.size / words.length;
-  if (vocabularyDiversity > 0.7 && text.length > 300) {
-    indicators.score += 10;
+  if (vocabularyDiversity > 0.65 && text.length > 200) {
+    indicators.score += 15;
     indicators.flags.push(`Very high vocabulary diversity (possible overuse of thesaurus)`);
   }
   
@@ -111,9 +111,9 @@ function analyzeWritingPatterns(text) {
   const hedgingCount = hedgingPhrases.filter(phrase => 
     lowerText.includes(phrase)
   ).length;
-  if (hedgingCount > 2) {
-    indicators.score += 10;
-    indicators.flags.push(`Multiple hedging phrases detected`);
+  if (hedgingCount > 1) {
+    indicators.score += 15;
+    indicators.flags.push(`Multiple hedging phrases detected (${hedgingCount})`);
   }
   
   // 6. Check for repetitive structure
@@ -121,9 +121,9 @@ function analyzeWritingPatterns(text) {
   const repeatedStarts = sentenceStarts.filter(
     (start, idx) => sentenceStarts.indexOf(start) !== idx
   ).length;
-  if (repeatedStarts > 2) {
-    indicators.score += 10;
-    indicators.flags.push(`Repetitive sentence structures`);
+  if (repeatedStarts > 1) {
+    indicators.score += 15;
+    indicators.flags.push(`Repetitive sentence structures (${repeatedStarts} repeated)`);
   }
   
   return indicators;
