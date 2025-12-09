@@ -186,16 +186,32 @@ async function detectAIContent(text) {
     // 60% model + 40% heuristic
     const combinedConfidence = (modelScore * 0.6) + (heuristicScore * 0.4);
     
+    // Flag as AI if:
+    // 1. Model explicitly classifies as AI/Fake, OR
+    // 2. Combined score exceeds 0.55, OR
+    // 3. Heuristic score alone is high (>0.50 = 50 points = multiple strong indicators)
+    const flaggedByAI = isAI;
+    const flaggedByCombined = combinedConfidence > 0.55;
+    const flaggedByHeuristic = heuristicScore > 0.50;
+    const finalIsAI = flaggedByAI || flaggedByCombined || flaggedByHeuristic;
+    
+    // Use highest relevant score for confidence
+    const finalConfidence = Math.max(combinedConfidence, heuristicScore);
+    
     console.log('[AI DETECTOR] Combined Detection:', {
       modelScore: (modelScore * 100).toFixed(1) + '%',
       heuristicScore: (heuristicAnalysis.score) + '%',
       combinedConfidence: (combinedConfidence * 100).toFixed(1) + '%',
-      isAI: isAI || combinedConfidence > 0.55
+      finalConfidence: (finalConfidence * 100).toFixed(1) + '%',
+      flaggedByAI: flaggedByAI,
+      flaggedByCombined: flaggedByCombined,
+      flaggedByHeuristic: flaggedByHeuristic,
+      isAI: finalIsAI
     });
     
     return {
-      isAI: isAI || combinedConfidence > 0.55,
-      confidence: combinedConfidence,
+      isAI: finalIsAI,
+      confidence: finalConfidence,
       label: label,
       modelScore: modelScore,
       heuristicScore: heuristicScore,
