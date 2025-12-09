@@ -135,40 +135,41 @@ function analyzeWritingPatterns(text) {
  * @returns {Promise<{isAI: boolean, confidence: number, label: string, analysis: Object}>}
  */
 async function detectAIContent(text) {
-  try {
-    // Validate input
-    if (!text || typeof text !== 'string' || text.trim().length === 0) {
-      return {
-        isAI: false,
-        confidence: 0,
-        label: 'INSUFFICIENT_TEXT',
-        error: 'No text content provided'
-      };
-    }
+  // Validate input
+  if (!text || typeof text !== 'string' || text.trim().length === 0) {
+    return {
+      isAI: false,
+      confidence: 0,
+      label: 'INSUFFICIENT_TEXT',
+      error: 'No text content provided'
+    };
+  }
 
-    // STEP 1: Heuristic Analysis
-    const heuristicAnalysis = analyzeWritingPatterns(text);
-    const heuristicScore = heuristicAnalysis.score / 100;
-    
-    console.log('[AI DETECTOR] Heuristic Analysis:', {
-      score: heuristicAnalysis.score,
-      flags: heuristicAnalysis.flags
-    });
-    
-    // Initialize classifier
+  // STEP 1: Heuristic Analysis (always runs, no errors expected)
+  const heuristicAnalysis = analyzeWritingPatterns(text);
+  const heuristicScore = heuristicAnalysis.score / 100;
+  
+  console.log('[AI DETECTOR] Heuristic Analysis:', {
+    score: heuristicAnalysis.score,
+    flags: heuristicAnalysis.flags
+  });
+  
+  // STEP 2: Model-based Detection (wrapped in try-catch, optional)
+  let modelScore = 0;
+  let isAI = false;
+  let label = 'UNKNOWN';
+  let result = null;
+  
+  try {
     const model = await initClassifier();
     
     // Truncate text if too long (model limit ~512 tokens)
     const truncatedText = text.substring(0, 2000);
     
-    // STEP 2: Model-based Detection
-    const result = await model(truncatedText);
+    // Run model detection
+    result = await model(truncatedText);
     
     console.log('[AI DETECTOR] Model Analysis result:', result);
-    
-    let modelScore = 0;
-    let isAI = false;
-    let label = 'UNKNOWN';
     
     if (Array.isArray(result) && result.length > 0) {
       const predictions = result.sort((a, b) => b.score - a.score);
@@ -181,53 +182,47 @@ async function detectAIContent(text) {
               label.toLowerCase().includes('ai') || 
               label.toLowerCase().includes('generated'));
     }
-    
-    // STEP 3: Combine scores (weighted average)
-    // 60% model + 40% heuristic
-    const combinedConfidence = (modelScore * 0.6) + (heuristicScore * 0.4);
-    
-    // Flag as AI if:
-    // 1. Model explicitly classifies as AI/Fake, OR
-    // 2. Combined score >= 0.50, OR
-    // 3. Heuristic score alone >= 0.50 (50+ points = multiple strong indicators)
-    const flaggedByAI = isAI;
-    const flaggedByCombined = combinedConfidence >= 0.50;
-    const flaggedByHeuristic = heuristicScore >= 0.50;
-    const finalIsAI = flaggedByAI || flaggedByCombined || flaggedByHeuristic;
-    
-    // Use highest relevant score for confidence
-    const finalConfidence = Math.max(combinedConfidence, heuristicScore);
-    
-    console.log('[AI DETECTOR] Combined Detection:', {
-      modelScore: (modelScore * 100).toFixed(1) + '%',
-      heuristicScore: (heuristicAnalysis.score) + '%',
-      combinedConfidence: (combinedConfidence * 100).toFixed(1) + '%',
-      finalConfidence: (finalConfidence * 100).toFixed(1) + '%',
-      flaggedByAI: flaggedByAI,
-      flaggedByCombined: flaggedByCombined,
-      flaggedByHeuristic: flaggedByHeuristic,
-      isAI: finalIsAI
-    });
-    
-    return {
-      isAI: finalIsAI,
-      confidence: finalConfidence,
-      label: label,
-      modelScore: modelScore,
-      heuristicScore: heuristicScore,
-      heuristicFlags: heuristicAnalysis.flags,
-      rawResult: result
-    };
-    
   } catch (error) {
-    console.error('[AI DETECTOR] Error:', error);
-    return {
-      isAI: false,
-      confidence: 0,
-      label: 'ERROR',
-      error: error.message
-    };
+    console.error('[AI DETECTOR] Model loading error (using heuristic fallback):', error.message);
+    label = 'MODEL_UNAVAILABLE';
   }
+  
+  // STEP 3: Combine scores (weighted average)
+  // 60% model + 40% heuristic
+  const combinedConfidence = (modelScore * 0.6) + (heuristicScore * 0.4);
+  
+  // Flag as AI if:
+  // 1. Model explicitly classifies as AI/Fake, OR
+  // 2. Combined score >= 0.50, OR
+  // 3. Heuristic score alone >= 0.50 (50+ points = multiple strong indicators)
+  const flaggedByAI = isAI;
+  const flaggedByCombined = combinedConfidence >= 0.50;
+  const flaggedByHeuristic = heuristicScore >= 0.50;
+  const finalIsAI = flaggedByAI || flaggedByCombined || flaggedByHeuristic;
+  
+  // Use highest relevant score for confidence
+  const finalConfidence = Math.max(combinedConfidence, heuristicScore);
+  
+  console.log('[AI DETECTOR] Combined Detection:', {
+    modelScore: (modelScore * 100).toFixed(1) + '%',
+    heuristicScore: (heuristicAnalysis.score) + '%',
+    combinedConfidence: (combinedConfidence * 100).toFixed(1) + '%',
+    finalConfidence: (finalConfidence * 100).toFixed(1) + '%',
+    flaggedByAI: flaggedByAI,
+    flaggedByCombined: flaggedByCombined,
+    flaggedByHeuristic: flaggedByHeuristic,
+    isAI: finalIsAI
+  });
+  
+  return {
+    isAI: finalIsAI,
+    confidence: finalConfidence,
+    label: label,
+    modelScore: modelScore,
+    heuristicScore: heuristicScore,
+    heuristicFlags: heuristicAnalysis.flags,
+    rawResult: result
+  };
 }
 
 /**
