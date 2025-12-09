@@ -1,87 +1,444 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<title>SeedVault</title>
-<link rel='manifest' href='/manifest.json'>
-<link rel="shortcut icon" href="a198cd0c_e2f0_4c99_ba51_342624a24db9_WP4_icon.ico" type="image/x-icon"/>
-<link href = "https://fonts.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+<title>SeedVault - Cultural Heritage Archive</title>
+<link rel="stylesheet" href="css/styles.css">
 <style>
-/* Keeping all original styles and colors (#f56642) */
-* {
-  box-sizing: border-box;
-  text-align: center;
-}
-a {
-  color: #f56642;
-}
-h3, h2, p {
-  font-family: 'Nunito Sans', sans-serif;
-  text-align: center;
-}
-h1:hover {
-  animation-name: artshadow;
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-  animation-duration: 0.5s;
-  animation-delay: 0.1s;
-}
-@keyframes artshadow {
-  from {}
-  to {text-shadow: 2px 2px 5px black;}
-}
-h1 {
-  color: #f56642;
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 900;
-}
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 20%;
-}
+  body {
+    background-color: #e1d7c6;
+    margin: 0;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+
+  /* Top Navigation Bar */
+  .top-nav {
+    background: #281d05;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .top-nav h1 {
+    color: #e1d7c6;
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .user-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .user-actions button {
+    background: #0f6939;
+    color: #ffffff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+
+  .user-actions button:hover {
+    background: #0d512d;
+  }
+
+  .user-actions button.secondary {
+    background: #865e0d;
+  }
+
+  .user-actions button.secondary:hover {
+    background: #3b2a19;
+  }
+
+  /* Main Layout */
+  .main-layout {
+    display: flex;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* Side Tab */
+  .side-tab {
+    width: 250px;
+    background: #ffffff;
+    border-right: 2px solid #b1aca2;
+    padding: 2rem 0;
+  }
+
+  .side-tab h2 {
+    color: #281d05;
+    padding: 0 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #865e0d;
+    padding-bottom: 0.5rem;
+  }
+
+  .side-tab ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .side-tab li {
+    margin: 0;
+  }
+
+  .side-tab a {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: #281d05;
+    text-decoration: none;
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+  }
+
+  .side-tab a:hover {
+    background: #e1d7c6;
+    border-left-color: #0f6939;
+    color: #0f6939;
+  }
+
+  .side-tab a.active {
+    background: #e1d7c6;
+    border-left-color: #865e0d;
+    font-weight: 600;
+    color: #0d512d;
+  }
+
+  /* Main Content Area */
+  .content-area {
+    flex: 1;
+    padding: 3rem;
+  }
+
+  .welcome-section {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(40, 29, 5, 0.1);
+    border: 2px solid #b1aca2;
+    text-align: center;
+  }
+
+  .welcome-section h1 {
+    color: #0d512d;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .welcome-section p {
+    color: #3b2a19;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .feature-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 2px solid #b1aca2;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #0f6939;
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card h3 {
+    color: #0d512d;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-card p {
+    color: #3b2a19;
+    line-height: 1.6;
+  }
+
+  .cta-section {
+    background: linear-gradient(135deg, #281d05 0%, #3b2a19 100%);
+    color: #e1d7c6;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .cta-section h2 {
+    color: #e1d7c6;
+    margin-bottom: 1rem;
+  }
+
+  .cta-section button {
+    background: #0f6939;
+    color: #ffffff;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+    margin: 0.5rem;
+  }
+
+  .cta-section button:hover {
+    background: #0d512d;
+  }
+
+  /* Login Modal */
+  .login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 29, 5, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .login-modal.active {
+    display: flex;
+  }
+
+  .login-box {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    border: 2px solid #865e0d;
+    position: relative;
+  }
+
+  .login-box h2 {
+    color: #281d05;
+    margin-bottom: 1.5rem;
+  }
+
+  .login-box input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 2px solid #b1aca2;
+    border-radius: 0.5rem;
+    background: #e1d7c6;
+    color: #281d05;
+  }
+
+  .login-box input:focus {
+    outline: none;
+    border-color: #0f6939;
+  }
+
+  .login-box button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #0f6939;
+    border: none;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .login-box button:hover {
+    background: #0d512d;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+  }
+
+  .alert {
+    color: #865e0d;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
-<img src = "seed.png" align = "center" class = "center" alt="SeedVault Logo">
 
-<h1><a href = "./"><b>SeedVault</b></a></h1>
-<h2>The Digital Archive for Indigenous Languages & Culture</h2>
-<h3>
-    <a href = "seed.html">**Seed**</a> | 
-    <a href = "about.html">**About**</a>
-</h3>
+<!-- Top Navigation -->
+<div class="top-nav">
+  <h1>🌱 SeedVault Cultural Archive</h1>
+  <div class="user-actions">
+    <button onclick="openLoginModal('admin')" class="secondary">Admin Login</button>
+    <button onclick="openLoginModal('guest')">Guest Access</button>
+  </div>
+</div>
 
+<!-- Main Layout -->
+<div class="main-layout">
+  <!-- Side Tab -->
+  <aside class="side-tab">
+    <h2>Tribes</h2>
+    <ul>
+      <li><a href="#" onclick="selectTribe('all')" class="active">All Collections</a></li>
+      <li><a href="#" onclick="selectTribe('tribe1')">Tribe 1 Archive</a></li>
+      <li><a href="#" onclick="selectTribe('tribe2')">Tribe 2 Archive</a></li>
+      <li><a href="#" onclick="selectTribe('tribe3')">Tribe 3 Archive</a></li>
+      <li><a href="#" onclick="selectTribe('public')">Public Collections</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content-area">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <img src="seed.png" alt="SeedVault Logo" style="width: 150px; margin-bottom: 1rem;">
+      <h1>SeedVault</h1>
+      <p><strong>The Digital Archive for Indigenous Languages & Culture</strong></p>
+      <p>A secure, ethically designed platform for preserving and protecting cultural heritage. This archive empowers communities to control their digital heritage while facilitating respectful engagement with ancestral knowledge, languages, and traditions.</p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Digital Heritage</h3>
+        <p>Browse collections of cultural artifacts, recordings, documents, and traditional knowledge preserved for future generations.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Secure Access</h3>
+        <p>Role-based permissions ensure that sensitive materials are protected while remaining accessible to appropriate community members.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>Community Driven</h3>
+        <p>Built with Indigenous Data Sovereignty principles, giving communities full control over their cultural materials.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📤</div>
+        <h3>Contribute</h3>
+        <p>Community members can upload and share artifacts, stories, and knowledge with secure file validation and storage.</p>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="cta-section">
+      <h2>Ready to Explore?</h2>
+      <p style="color: #e1d7c6; margin-bottom: 1.5rem;">Login to access the full archive or browse public collections as a guest</p>
+      <button onclick="openLoginModal('member')">Member Login</button>
+      <button onclick="browseAsGuest()">Browse as Guest</button>
+    </div>
+  </main>
+</div>
+
+<!-- Login Modal -->
+<div class="login-modal" id="loginModal">
+  <div class="login-box">
+    <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+    <h2 id="loginTitle">Login to SeedVault</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="handleLogin()">Login</button>
+    <div class="alert" id="loginError"></div>
+    <p style="font-size: 0.9rem; margin-top: 1rem; color: #666;">
+      <strong>Test Accounts:</strong><br>
+      admin/seedvault | tribe1/tribe1pass | guest/guest123
+    </p>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
 <script>
-let deferredPrompt = null;
+  let currentLoginType = 'member';
 
-window.addEventListener('beforeinstallprompt', (e) => {
- // Prevent Chrome 67 and earlier from automatically showing the prompt
- e.preventDefault();
- // Stash the event so it can be triggered later.
- deferredPrompt = e;
-});
-
-async function install() {
- if (deferredPrompt) {
-  deferredPrompt.prompt();
-  console.log(deferredPrompt)
-  deferredPrompt.userChoice.then(function(choiceResult){
-
-    if (choiceResult.outcome === 'accepted') {
-    console.log('Your PWA has been installed');
-  } else {
-    console.log('User chose to not install your PWA');
+  function openLoginModal(type) {
+    currentLoginType = type;
+    const modal = document.getElementById('loginModal');
+    const title = document.getElementById('loginTitle');
+    
+    if (type === 'admin') {
+      title.textContent = 'Admin Login';
+    } else if (type === 'guest') {
+      title.textContent = 'Guest Access';
+    } else {
+      title.textContent = 'Member Login';
+    }
+    
+    modal.classList.add('active');
   }
 
-  deferredPrompt = null;
+  function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('loginError').textContent = '';
+  }
 
+  function browseAsGuest() {
+    localStorage.setItem('loggedInUser', 'guest');
+    localStorage.setItem('role', 'guest');
+    window.location.href = 'seed.html';
+  }
+
+  function selectTribe(tribe) {
+    // Remove active class from all links
+    document.querySelectorAll('.side-tab a').forEach(link => {
+      link.classList.remove('active');
+    });
+    
+    // Add active class to clicked link
+    event.target.classList.add('active');
+    
+    // In a full implementation, this would filter the content
+    console.log('Selected tribe:', tribe);
+  }
+
+  // Check if already logged in
+  window.addEventListener('load', () => {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const role = localStorage.getItem('role');
+    
+    if (loggedInUser && role) {
+      // User is already logged in, redirect to appropriate page
+      if (role === 'admin') {
+        window.location.href = 'admin.html';
+      } else if (role.startsWith('tribe')) {
+        window.location.href = 'tribe-dashboard.html';
+      }
+    }
   });
-
- }
-}
 </script>
+
 </body>
 </html>

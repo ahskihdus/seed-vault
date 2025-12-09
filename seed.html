@@ -3,56 +3,69 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<title>Seed Vault</title>
+<title>Seed Vault - Browse Archive</title>
 <link rel="shortcut icon" href="a198cd0c_e2f0_4c99_ba51_342624a24db9_WP4_icon.ico" type="image/x-icon"/>
-<link href = "https://fonts.googleapis.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
 <style>
 * {
   box-sizing: border-box;
 }
-body,#artInput{text-align: center;}
+body {
+  background-color: #e1d7c6;
+  text-align: center;
+}
 #artInput {
   background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Vector_search_icon.svg/221px-Vector_search_icon.svg.png');
-  background-position: 10px 10px;;
+  background-position: 10px 10px;
   background-repeat: no-repeat;
   background-size: 25px;
   width: 60%;
   font-size: 16px;
   padding: 12px 20px 12px 40px;
-  border: 1px solid #ddd;
+  border: 2px solid #b1aca2;
   margin-bottom: 12px;
   border-radius: 25px;
+  background-color: #ffffff;
+  color: #281d05;
 }
 #artInput:focus {
-  outline:none
+  outline: none;
+  border-color: #0f6939;
 }
 #artTable {
   border-collapse: collapse;
   width: 85%;
-  border: 1px solid #ddd;
+  border: 2px solid #b1aca2;
   font-size: 18px;
-  margin-bottom:40px;
+  margin-bottom: 40px;
+  background: #ffffff;
 }
 #artTable th, #artTable td {
   text-align: left;
   padding: 12px;
   text-align: center;
-
 }
 #artTable tr {
-  border-bottom: 1px solid #ddd;
-
+  border-bottom: 1px solid #b1aca2;
 }
-#artTable tr.header, #artTable tr:hover {
-  background-color: #f1f1f1;
-
+#artTable tr.header {
+  background-color: #281d05;
+  color: #e1d7c6;
+}
+#artTable tr:hover {
+  background-color: #e1d7c6;
 }
 a {
-  color: #f56642;
+  color: #0f6939;
+  transition: color 0.3s;
 }
-
+a:hover {
+  color: #865e0d;
+}
 h2, h1, p {
   font-family: 'Nunito Sans', sans-serif;
+  color: #281d05;
 }
 h1:hover {
   animation-name: artshadow;
@@ -61,133 +74,314 @@ h1:hover {
   animation-duration: 0.5s;
   animation-delay: 0.1s;
 }
-
 @keyframes artshadow {
   from {}
-  to {text-shadow: 2px 2px 5px black;}
+  to {text-shadow: 2px 2px 5px rgba(134, 94, 13, 0.5);}
 }
 h1 {
-  color: #f56642;
+  color: #0d512d;
   transition: 0.3s;
+}
+.filter-section {
+  margin: 2rem auto;
+  max-width: 800px;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 2px solid #b1aca2;
+}
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 0.6rem 1.2rem;
+  background: #e1d7c6;
+  border: 2px solid #b1aca2;
+  color: #281d05;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.filter-btn:hover {
+  background: #0f6939;
+  color: #ffffff;
+  border-color: #0f6939;
+}
+.filter-btn.active {
+  background: #0f6939;
+  color: #ffffff;
+  border-color: #0f6939;
+}
+.loading {
+  padding: 2rem;
+  color: #3b2a19;
+  font-size: 1.2rem;
+}
+.no-results {
+  padding: 2rem;
+  color: #865e0d;
+  font-size: 1.1rem;
+}
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+.badge-public {
+  background: #0f6939;
+  color: #ffffff;
+}
+.badge-tribe1 {
+  background: #865e0d;
+  color: #ffffff;
+}
+.badge-tribe2 {
+  background: #3b2a19;
+  color: #e1d7c6;
+}
+.badge-tribe3 {
+  background: #281d05;
+  color: #e1d7c6;
 }
 </style>
 </head>
 <body>
+
+<div class="header"></div>
+
 <h1><a href="index.html"><b>Seed Vault</b></a></h1>
 <h2>Search artifacts by name, author, and more</h2>
+
+<!-- Filter Section -->
+<div class="filter-section">
+  <h3 style="margin-bottom: 1rem;">Filter by Access Level</h3>
+  <div class="filter-buttons">
+    <button class="filter-btn active" onclick="filterArtifacts('all')">All Artifacts</button>
+    <button class="filter-btn" onclick="filterArtifacts('public')">Public</button>
+    <button class="filter-btn" onclick="filterArtifacts('tribe1')">Tribe 1</button>
+    <button class="filter-btn" onclick="filterArtifacts('tribe2')">Tribe 2</button>
+    <button class="filter-btn" onclick="filterArtifacts('tribe3')">Tribe 3</button>
+  </div>
+</div>
+
+<!-- Search Bar -->
 <div class="centerenter">
-<input type="text" id="artInput" onkeyup="artFunction()" placeholder="name, date, author..." title="Work search">
+  <input type="text" id="artInput" onkeyup="searchTable()" placeholder="Search by title, author, date..." title="Work search">
 </div>
+
+<!-- Loading Message -->
+<div id="loadingMessage" class="loading">
+  Loading artifacts from database...
+</div>
+
+<!-- Table -->
 <div class="tablesearch">
-<table id="artTable" align="center">
-<tr class="header">
-<th style="width:33%">Title</th>
-<th style="width:33%">Author</th>
-<th style="width:33%">Date Added</th>
-</tr>
-<tr>
-<td><a href="https://rosettaproject.org/disk/concept/" target=”_blank”>Rosetta Disk</a></td>
-<td>The Long Now Foundation</td>
-<td>06/04/2004</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/amazon/188740.html" target=”_blank”>Shuar akitiai (ear ornaments)</a></td>
-<td>Dr. Victor Wolfgang Von Hagen</td>
-<td>02/09/2010</td>
-</tr>
-<tr>
-<td><a href="https://www.britishmuseum.org/collection/egypt/explore-rosetta-stone" target=”_blank”>Rosetta Stone</a></td>
-<td>French soldiers during Napolean</td>
-<td>07/11/2012</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/california-greatbasin/118261.html" target=”_blank”>Degikup Baskets</a></td>
-<td>Archer M. Huntington</td>
-<td>05/17/2019</td>
-</tr>
-<tr>
-<td><a href="https://smarthistory.org/palette-of-king-narmer/" target=”_blank”>Narmer Palette </a></td>
-<td>James Quibell</td>
-<td>09/23/2007</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/southwest/228644.html" target=”_blank”>Buffalo Dancers</a></td>
-<td>Julian Martinez</td>
-<td>6/29/2008</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/woodlands/242165.html" target=”_blank”>Potawatomi Bag</a></td>
-<td>David C. Vernon</td>
-<td>03/26/2023</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/arctic-subarctic/151692.html" target=”_blank”>Cree Métis Bag</a></td>
-<td>E. C. McDonald</td>
-<td>09/17/2025</td>
-</tr>
-<tr>
-<td><a href="https://www.google.com/search?rlz=1C1ONGR_enUS1060US1060&cs=1&sca_esv=ef29957d23e94eec&sxsrf=AE3TifMUa1hx7c-lF7cD1RkqiLSQGQrbJA%3A1761762130273&q=Archaeology+and+Language+III%3A+Artefacts%2C+Languages+and+Texts&sa=X&ved=2ahUKEwjkj56vg8qQAxW4nGoFHadUJhMQxccNegQIHhAG&mstk=AUtExfBrZ6fyAMqx7Vb_vmGsY5vdI3vG6v0itvMOrrlDQq4oMfE_MuDEB9CDmp8rwddGCl_1Bx3B4Mf-mnpM5dZkuArzzHCcIbW2PSJusGWjOtkbZX7NaI8Pt9vMe4_XktE68yyKXOS4byaQVIHa57BX3yD0wGwIXaDlMkVEJLkkQJThMkxBiRkR58a_o8-rPc7s_vQAORrp8UkcEX0sOgChAsrqhSgyafLpAHSwp7uBV4PRfXAexu-mnJrleG4a6MYPSCu7xtt8Vya2P-Oj7dx6YHkuz-ShOX35qMk1GPmLtqIBlEt6LzSyM__o548MCDdAQXnAc99wG33E7fbk10Q4UVeK2oAhAIsKpPJPo3wtWpUU&csui=3" target=”_blank”>Archaeology and Language III: Artefacts, Languages and Texts</a></td>
-<td>Roger Blench</td>
-<td>10/12/2012</td>
-</tr>
-<tr>
-<td><a href="https://aarven.com/en-us/blogs/artisans/the-history-of-kiondo-baskets-a-woven-legacy-of-kenya" target=”_blank”>Kiondo Basket</a></td>
-<td>Leona Chapman</td>
-<td>06/07/2013</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/patagonia/184932.html" target=”_blank”>Aónikenk (Southern Tehuelche) Bola</a></td>
-<td>Unknown</td>
-<td>06/01/2019</td>
-</tr>
-<tr>
-<td><a href="https://mukuyu.wordpress.com/tag/gichandi/" target=”_blank”>Gĩcandĩ heliograhics and tentative decoding</a></td>
-<td>Unknown</td>
-<td>05/22/2009</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/andes/157233.html" target=”_blank”>Lambayeque Gold Discs</a></td>
-<td>Major Otto Holstein</td>
-<td>05/28/2007</td>
-</tr>
-<tr>
-<td><a href="https://www.researchgate.net/publication/252051679_Speakers_and_documentation_of_endangered_languages" target=”_blank”>Endangered Speakers</a></td>
-<td>Evangelia Adamou</td>
-<td>09/21/2010</td>
-</tr>
-<tr>
-<td><a href="https://americanindian.si.edu/exhibitions/infinityofnations/meso-carib/053753.html"  target=”_blank”>Taíno zemí of Deminán Caracaracol</a></td>
-<td>Theodoor de Booy</td>
-<td>3/16/2017</td>
-</tr>
-<tr>
-</table>
+  <table id="artTable" align="center" style="display: none;">
+    <thead>
+      <tr class="header">
+        <th style="width:30%">Title</th>
+        <th style="width:25%">Uploaded By</th>
+        <th style="width:20%">Date Added</th>
+        <th style="width:15%">Type</th>
+        <th style="width:10%">Access</th>
+      </tr>
+    </thead>
+    <tbody id="artifactTableBody">
+      <!-- Dynamic content loaded here -->
+    </tbody>
+  </table>
 </div>
-<p>this project was created and is maintained by Seed Vault.&#32;Last updated 8/21/19.</p>
-<script>function artFunction() {
-  // Declare starting variables
-  var input = document.getElementById("artInput");
-  var filter = input.value.toUpperCase();
-  var table = document.getElementById("artTable");
-  var trs = table.tBodies[0].getElementsByTagName("tr");
-  // Loop through rows
-  for (var i = 0; i < trs.length; i++) {
-    // Define the cells
-    var tds = trs[i].getElementsByTagName("td");
-    // hide the row
-    trs[i].style.display = "none";
-    // loop through row cells
-    for (var i2 = 0; i2 < tds.length; i2++) {
-      // if there's a match
-      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
-        // show the row
-        trs[i].style.display = "";
-        // skip to the next row
-        continue;
-      }
+
+<!-- No Results Message -->
+<div id="noResults" class="no-results" style="display: none;">
+  No artifacts found matching your criteria.
+</div>
+
+<p>This project was created and is maintained by Seed Vault.</p>
+
+<script src="js/auth.js"></script>
+<script>
+let allArtifacts = [];
+let currentFilter = 'all';
+
+// Load artifacts from database when page loads
+window.addEventListener('load', async () => {
+  await loadArtifacts();
+});
+
+async function loadArtifacts() {
+  try {
+    const role = localStorage.getItem('role') || 'guest';
+    
+    // Fetch artifacts from API
+    const response = await fetch(`http://localhost:3000/api/files?role=${role}`);
+    const data = await response.json();
+    
+    if (data.success) {
+      allArtifacts = data.files;
+      displayArtifacts(allArtifacts);
+      
+      // Hide loading, show table
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('artTable').style.display = 'table';
+    } else {
+      showError('Failed to load artifacts');
     }
+  } catch (error) {
+    console.error('Error loading artifacts:', error);
+    showError('Error connecting to database. Using sample data instead.');
+    loadSampleData();
   }
 }
+
+function loadSampleData() {
+  // Fallback sample data if database isn't available
+  allArtifacts = [
+    {
+      title: 'Rosetta Disk',
+      uploaded_by_name: 'The Long Now Foundation',
+      upload_date: '2004-06-04',
+      mimetype: 'application/pdf',
+      access_level: 'public'
+    },
+    {
+      title: 'Traditional Basket Weaving',
+      uploaded_by_name: 'Tribe 1 Elder',
+      upload_date: '2023-11-15',
+      mimetype: 'image/jpeg',
+      access_level: 'tribe1'
+    },
+    {
+      title: 'Ancestral Stories Recording',
+      uploaded_by_name: 'Tribe 2 Historian',
+      upload_date: '2024-02-20',
+      mimetype: 'audio/mpeg',
+      access_level: 'tribe2'
+    }
+  ];
+  
+  displayArtifacts(allArtifacts);
+  document.getElementById('loadingMessage').style.display = 'none';
+  document.getElementById('artTable').style.display = 'table';
+}
+
+function displayArtifacts(artifacts) {
+  const tbody = document.getElementById('artifactTableBody');
+  tbody.innerHTML = '';
+  
+  if (artifacts.length === 0) {
+    document.getElementById('artTable').style.display = 'none';
+    document.getElementById('noResults').style.display = 'block';
+    return;
+  }
+  
+  document.getElementById('artTable').style.display = 'table';
+  document.getElementById('noResults').style.display = 'none';
+  
+  artifacts.forEach(artifact => {
+    const row = document.createElement('tr');
+    
+    // Format date
+    const date = new Date(artifact.upload_date);
+    const formattedDate = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    
+    // Determine file type icon/name
+    let fileType = 'Document';
+    if (artifact.mimetype) {
+      if (artifact.mimetype.startsWith('image/')) fileType = 'Image';
+      else if (artifact.mimetype.startsWith('audio/')) fileType = 'Audio';
+      else if (artifact.mimetype.startsWith('video/')) fileType = 'Video';
+      else if (artifact.mimetype.includes('pdf')) fileType = 'PDF';
+    }
+    
+    // Create badge for access level
+    const badgeClass = `badge-${artifact.access_level}`;
+    const accessBadge = `<span class="badge ${badgeClass}">${artifact.access_level}</span>`;
+    
+    row.innerHTML = `
+      <td><strong>${artifact.title || artifact.original_name}</strong></td>
+      <td>${artifact.uploaded_by_name || 'Unknown'}</td>
+      <td>${formattedDate}</td>
+      <td>${fileType}</td>
+      <td>${accessBadge}</td>
+    `;
+    
+    tbody.appendChild(row);
+  });
+}
+
+function filterArtifacts(filter) {
+  currentFilter = filter;
+  
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  // Filter artifacts
+  let filtered = allArtifacts;
+  if (filter !== 'all') {
+    filtered = allArtifacts.filter(artifact => artifact.access_level === filter);
+  }
+  
+  displayArtifacts(filtered);
+  
+  // Reset search
+  document.getElementById('artInput').value = '';
+}
+
+function searchTable() {
+  const input = document.getElementById('artInput').value.toUpperCase();
+  const table = document.getElementById('artTable');
+  const tbody = document.getElementById('artifactTableBody');
+  const rows = tbody.getElementsByTagName('tr');
+  
+  let visibleCount = 0;
+  
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].getElementsByTagName('td');
+    let found = false;
+    
+    for (let j = 0; j < cells.length; j++) {
+      if (cells[j].innerHTML.toUpperCase().indexOf(input) > -1) {
+        found = true;
+        break;
+      }
+    }
+    
+    if (found) {
+      rows[i].style.display = '';
+      visibleCount++;
+    } else {
+      rows[i].style.display = 'none';
+    }
+  }
+  
+  // Show/hide no results message
+  if (visibleCount === 0 && input !== '') {
+    document.getElementById('noResults').style.display = 'block';
+  } else {
+    document.getElementById('noResults').style.display = 'none';
+  }
+}
+
+function showError(message) {
+  document.getElementById('loadingMessage').textContent = message;
+  document.getElementById('loadingMessage').style.color = '#865e0d';
+}
 </script>
+
 </body>
 </html>
