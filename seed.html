@@ -56,6 +56,10 @@ body {
   color: #e1d7c6;
   width : 502%;
 }
+#artTable tr:not(.header):hover {
+  background-color: #e1d7c6;
+  cursor: pointer;
+}
 #artTable td:hover {
   background-color: #e1d7c6;
 }
@@ -424,6 +428,12 @@ function displayArtifacts(artifacts) {
       <td>${fileType}</td>
       <td>${accessBadge}</td>
     `;
+    
+    // Make row clickable
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function() {
+      window.location.href = `view-artifact.html?id=${artifact.id}`;
+    });
     
     tbody.appendChild(row);
   });
