@@ -409,12 +409,15 @@ body {
 // Get the currently logged in user and role from browser storage
 let currentUser = localStorage.getItem('loggedInUser') || 'guest';
 let currentRole = localStorage.getItem('role') || 'guest';
+
+// Tracks how many searches are run, performance, and denied access attempts
 let searchMetrics = {
   queryCount: 0,
   totalLatency: 0,
   deniedCount: 0
 };
 
+// Holds all the artifact records loaded from the backend database
 let artifacts = [];
 
 // ============================================================================
@@ -425,17 +428,23 @@ function canAccess(artifact) {
   const startTime = performance.now();
   
   let allowed = false;
-  
+
+  // Admin has permission to everything
   if (currentRole === 'admin') {
     allowed = true;
+
+     // Public artifacts can be viewed by anyone
   } else if (artifact.access_level === 'public') {
     allowed = true;
+
+    // Tribe members can only see content from their tribe
   } else if (currentRole === artifact.access_level) {
     allowed = true;
   }
   
   const latency = performance.now() - startTime;
-  
+
+   // Log denied access attempts for monitoring and accountability
   if (!allowed) {
     searchMetrics.deniedCount++;
     console.error('🚨 Access denied:', {
@@ -456,7 +465,8 @@ function canAccess(artifact) {
 function performSearch() {
   const startTime = performance.now();
   searchMetrics.queryCount++;
-  
+
+  // Read filters and user input from the form
   const query = document.getElementById('searchQuery').value.toLowerCase();
   const accessFilter = document.getElementById('accessFilter').value;
   const typeFilter = document.getElementById('typeFilter').value;
