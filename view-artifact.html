@@ -412,7 +412,11 @@
       const filename = artifact.filename;
       const accessLevel = artifact.accessLevel || artifact.access_level;
       const role = localStorage.getItem('role');
-      const fileUrl = `http://localhost:3000/api/file/${accessLevel}/${filename}?userRole=${role}`;
+      
+      // Use filename directly if it's already a full URL, otherwise construct API URL
+      const fileUrl = filename.startsWith('http') 
+        ? filename 
+        : `http://localhost:3000/api/file/${accessLevel}/${filename}?userRole=${role}`;
       
       if (mimetype.startsWith('image/')) {
         // Display image
