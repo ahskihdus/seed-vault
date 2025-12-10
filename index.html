@@ -56,6 +56,14 @@
     background: #3b2a19;
   }
 
+  .user-actions button.faq-btn {
+  background: #865e0d;
+  }
+
+  .user-actions button.faq-btn:hover {
+  background: #3b2a19;
+  }
+  
   /* Main Layout */
   .main-layout {
     display: flex;
@@ -298,6 +306,7 @@
 <div class="top-nav">
   <h1>🌱 SeedVault Cultural Archive</h1>
   <div class="user-actions">
+    <button onclick="window.location.href='faq.html'" class="faq-btn">❓ FAQ</button>
     <button onclick="openLoginModal('admin')" class="secondary">Admin Login</button>
     <button onclick="openLoginModal('guest')">Guest Access</button>
   </div>
