@@ -110,11 +110,10 @@ This installs:
 - pdf-parse (PDF text extraction)
 
 ## 5. CREATE MYSQL DATABASE
-Windows: 
-- Since the original script uses Linux shell syntax, you must run the SQL commands either interactively or by saving them to a file.
-- Copy all the SQL commands 
-- Save them into a new plain text file named schema.sql inside your seed-vault directory. (IF THIS ALREADY EXISTS IN YOUR SEED VAULT FOLDER CAN SKIP THESE STEPS)
-
+Windows:
+- The schema file should already be located in the seed-vault
+    - Run the "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" mysql -u root -p < schema.sql
+          - your directory above can change depending on your mySQL version and location
 ```bash
 mysql -u root << EOF
 CREATE DATABASE seedvault;
@@ -191,12 +190,6 @@ INSERT INTO tribes (name, description, contact_email) VALUES
 ('Tribe 2', 'Second indigenous community', 'contact@tribe2.org'),
 ('Tribe 3', 'Third indigenous community', 'contact@tribe3.org');
 EOF
-```
-
-Windows:
-- Open your terminal in the seed-vault directory and run the following command. You will be prompted for the root password you set:
-``` bash
-mysql -u root -p < setup.sql
 ```
 
 ## 6. CREATE UPLOAD DIRECTORIES
