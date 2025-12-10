@@ -629,14 +629,15 @@ async function loadArtifacts() {
     
     if (data.success && data.files) {
       artifacts = data.files.map(file => ({
-        id: file.id || file.filename,
+        id: file.filename || file.id,
         title: file.title || file.originalName || file.original_name,
         description: file.description || '',
         uploaded_by: file.uploadedBy || file.uploaded_by_name || 'Unknown',
         upload_date: file.uploadDate || file.upload_date,
         mimetype: file.mimetype || '',
         access_level: file.accessLevel || file.access_level || 'public',
-        tags: file.tags || []
+        tags: file.tags || [],
+        original: file
       }));
       
       console.log('📚 Loaded', artifacts.length, 'artifacts from database');
