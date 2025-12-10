@@ -86,6 +86,9 @@ brew services start mysql
 
 ### Windows: 
 Download from https://dev.mysql.com/downloads/mysql/
+    1) Run the installer and follow the setup.
+    2) Crucial: During setup, you will be prompted to set a root password. Remember this password as you will need it for the next step.
+    3) The installer will typically set up the MySQL server as a Windows service and start it automatically.
 
 ### Linux:
 ```bash
