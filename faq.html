@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SeedVault - FAQ & Troubleshooting</title>
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+body {
+  background-color: #e1d7c6;
+  margin: 0;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.header {
+  background: #281d05;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header h1 {
+  color: #e1d7c6;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.header a {
+  color: #e1d7c6;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: #0f6939;
+  border-radius: 0.5rem;
+  transition: background 0.3s;
+}
+
+.header a:hover {
+  background: #0d512d;
+}
+
+.faq-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.page-title {
+  text-align: center;
+  color: #0d512d;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.page-subtitle {
+  text-align: center;
+  color: #3b2a19;
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+}
+
+.section {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(40, 29, 5, 0.1);
+  border: 2px solid #b1aca2;
+}
+
+.section h2 {
+  color: #0d512d;
+  border-bottom: 3px solid #0f6939;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.faq-item {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e1d7c6;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.question {
+  color: #281d05;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.question-icon {
+  color: #0f6939;
+  font-size: 1.3rem;
+}
+
+.answer {
+  color: #3b2a19;
+  line-height: 1.8;
+  margin-left: 2rem;
+}
+
+.answer ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.answer li {
+  margin-bottom: 0.5rem;
+}
+
+.fix-label {
+  font-weight: 700;
+  color: #0f6939;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.tip-box {
+  background: #e1d7c6;
+  border-left: 4px solid #0f6939;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+}
+
+.tip-box strong {
+  color: #0d512d;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #0f6939;
+  color: #ffffff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background: #0d512d;
+  transform: translateY(-5px);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌱 SeedVault FAQ</h1>
+  <a href="index.html">← Back to Home</a>
+</div>
+
+<div class="faq-container">
+  <h1 class="page-title">Frequently Asked Questions</h1>
+  <p class="page-subtitle">Find answers to common questions and troubleshooting tips</p>
+
+  <!-- TROUBLESHOOTING SECTION -->
+  <div class="section">
+    <h2>🔧 Troubleshooting Guide</h2>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">❓</span>
+        I searched for a word, and nothing came up.
+      </div>
+      <div class="answer">
+        <span class="fix-label">Try this:</span>
+        <ul>
+          <li>Make sure the word is spelled correctly</li>
+          <li>Try searching with lowercase only</li>
+          <li>Remove any extra spaces before or after the word</li>
+          <li>If you used accents or special characters, try without them</li>
+          <li>Refresh the page and search again</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">❓</span>
+        My entry won't save.
+      </div>
+      <div class="answer">
+        <span class="fix-label">Try:</span>
+        <ul>
+          <li>Make sure every required field is filled out</li>
+          <li>Remove special symbols like &lt;, &gt;, or scripts (if the app blocks them)</li>
+          <li>Refresh the page and try again</li>
+          <li>If you're uploading a file, make sure it's the right format and size</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">❓</span>
+        I accidentally added the same word twice.
+      </div>
+      <div class="answer">
+        <p><strong>Good news:</strong> Seed Vault allows duplicates.</p>
+        <p>If you want to clean up your list:</p>
+        <ul>
+          <li>Use search to find all versions of the word</li>
+          <li>Delete the extra ones manually</li>
+          <li>Or merge them into one entry if needed</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">❓</span>
+        The characters in my entry look weird or broken.
+      </div>
+      <div class="answer">
+        <span class="fix-label">Fix:</span>
+        <ul>
+          <li>Check that you're using UTF-8 encoding (most browsers do this automatically)</li>
+          <li>Re-enter the word without copying/pasting from another app</li>
+          <li>Try typing the characters manually</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">❓</span>
+        The search bar isn't responding.
+      </div>
+      <div class="answer">
+        <span class="fix-label">Try:</span>
+        <ul>
+          <li>Refresh the page</li>
+          <li>Make sure your browser didn't block scripts</li>
+          <li>Try typing slowly (some browsers lag on large datasets)</li>
+          <li>Try another device or browser</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ SECTION -->
+  <div class="section">
+    <h2>💡 Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">Q:</span>
+        What is Seed Vault?
+      </div>
+      <div class="answer">
+        Seed Vault is a language archive where users can store, search, and organize words, definitions, and examples. It helps you build a safe and easy-to-use collection of language data.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">Q:</span>
+        Can I add the same word more than once?
+      </div>
+      <div class="answer">
+        Yes. Seed Vault allows duplicates. This can be helpful if the same word has different meanings, pronunciations, or dialect versions.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">Q:</span>
+        What can I store in Seed Vault?
+      </div>
+      <div class="answer">
+        You can store words, definitions, categories, translations, and any extra notes your project needs.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">Q:</span>
+        What characters are supported?
+      </div>
+      <div class="answer">
+        Seed Vault supports UTF-8 characters, which means most languages — including non-Latin scripts and IPA — should work normally.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">Q:</span>
+        How do I delete an entry?
+      </div>
+      <div class="answer">
+        Use the Delete button next to the entry. You will get a confirmation message before it is permanently removed.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">Q:</span>
+        Is my data safe?
+      </div>
+      <div class="answer">
+        Seed Vault blocks dangerous inputs like scripts or malware-like code. Still, avoid pasting code or unknown text into the app.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="question">
+        <span class="question-icon">Q:</span>
+        Why didn't my file upload work?
+      </div>
+      <div class="answer">
+        Your file may be:
+        <ul>
+          <li>Too large (max 10MB)</li>
+          <li>The wrong format (only images, audio, documents, and video allowed)</li>
+          <li>Missing required data</li>
+        </ul>
+        <p>Check your file and try again.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP TIP -->
+  <div class="tip-box">
+    <strong>💡 Still need help?</strong><br>
+    Contact your system administrator or check the <a href="README.md" style="color: #0f6939; font-weight: 600;">documentation</a> for more detailed information.
+  </div>
+</div>
+
+<a href="#" class="back-to-top" id="backToTop">↑</a>
+
+<script>
+// Show/hide back to top button
+window.addEventListener('scroll', () => {
+  const backToTop = document.getElementById('backToTop');
+  if (window.scrollY > 300) {
+    backToTop.classList.add('visible');
+  } else {
+    backToTop.classList.remove('visible');
+  }
+});
+
+// Smooth scroll to top
+document.getElementById('backToTop').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+</script>
+
+</body>
+</html>
