@@ -405,6 +405,8 @@ body {
 // ADVANCED SEARCH ENGINE WITH ACCESS CONTROL
 // ============================================================================
 
+  
+// Get the currently logged in user and role from browser storage
 let currentUser = localStorage.getItem('loggedInUser') || 'guest';
 let currentRole = localStorage.getItem('role') || 'guest';
 let searchMetrics = {
