@@ -110,7 +110,8 @@ This installs:
 - pdf-parse (PDF text extraction)
 
 ## 5. CREATE MYSQL DATABASE
-Windows: Since the original script uses Linux shell syntax, you must run the SQL commands either interactively or by saving them to a file.
+Windows: 
+- Since the original script uses Linux shell syntax, you must run the SQL commands either interactively or by saving them to a file.
 - Copy all the SQL commands 
 - Save them into a new plain text file named setup.sql inside your seed-vault directory.
 
@@ -192,7 +193,8 @@ INSERT INTO tribes (name, description, contact_email) VALUES
 EOF
 ```
 
-- Windows: Open your terminal in the seed-vault directory and run the following command. You will be prompted for the root password you set:
+Windows:
+- Open your terminal in the seed-vault directory and run the following command. You will be prompted for the root password you set:
 ``` bash
 mysql -u root -p < setup.sql
 ```
