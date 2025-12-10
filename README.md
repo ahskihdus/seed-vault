@@ -248,7 +248,7 @@ You should see:
 ### Allowed File Types
 - **Images:** JPG, PNG, GIF
 - **Audio:** MP3, WAV, OGG
-- **Documents:** PDF, TXT
+- **Documents:** PDF, DOCX, TXT
 - **Video:** MP4, WEBM
 
 ## AI Content Detection
