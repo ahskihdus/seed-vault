@@ -111,9 +111,9 @@ This installs:
 
 ## 5. CREATE MYSQL DATABASE
 Windows:
-- The schema file should already be located in the seed-vault
+- The schema file should already be located in the seed-vault (your directory below can change depending on your mySQL version and location)
     - Run the "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" mysql -u root -p < schema.sql
-          - your directory above can change depending on your mySQL version and location
+
 ```bash
 mysql -u root << EOF
 CREATE DATABASE seedvault;
