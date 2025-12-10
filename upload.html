@@ -283,11 +283,38 @@
       document.getElementById('uploadForm').style.display = 'none';
     }
     
-    // Set default access level based on role
+    // Restrict access level options based on user role
     const accessLevelSelect = document.getElementById('accessLevel');
-    if (role.startsWith('tribe')) {
-      accessLevelSelect.value = role;
+    const tribeSelect = document.getElementById('tribe');
+    
+    function updateAccessLevelOptions() {
+      const currentValue = accessLevelSelect.value;
+      const options = accessLevelSelect.querySelectorAll('option');
+      
+      options.forEach(option => {
+        if (role.startsWith('tribe')) {
+          // Tribe members can only upload to their tribe or public
+          if (option.value === 'public' || option.value === role) {
+            option.style.display = 'block';
+          } else {
+            option.style.display = 'none';
+          }
+        } else if (role === 'admin') {
+          // Admins can upload to any level
+          option.style.display = 'block';
+        }
+      });
+      
+      // Set default if current value is now hidden
+      if (accessLevelSelect.value === '' || accessLevelSelect.options[accessLevelSelect.selectedIndex].style.display === 'none') {
+        accessLevelSelect.value = 'public';
+      }
     }
+    
+    updateAccessLevelOptions();
+    
+    // Update access level options when tribe selection changes
+    tribeSelect.addEventListener('change', updateAccessLevelOptions);
     
     // Handle file selection
     const fileInput = document.getElementById('fileInput');
