@@ -180,14 +180,58 @@ h1 {
   font-size: 0.9rem;
   color: #3b2a19;
 }
+/* NEW: User info banner styles */
+.user-info-banner {
+  background: #0f6939;
+  color: white;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+/* NEW: Access warning styles */
+.access-warning {
+  background: #fff3cd;
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 2px solid #ffc107;
+  border-radius: 0.5rem;
+  max-width: 800px;
+  color: #856404;
+  font-weight: 600;
+}
+/* NEW: Advanced search button */
+.advanced-search-btn {
+  display: inline-block;
+  margin: 1rem 0;
+  padding: 0.6rem 1.2rem;
+  background: #0f6939;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.advanced-search-btn:hover {
+  background: #0d512d;
+  color: white;
+  transform: translateY(-2px);
+}
 </style>
 </head>
 <body>
+
+<!-- NEW: User info banner -->
+<div class="user-info-banner" id="userInfoBanner"></div>
 
 <div class="header"></div>
 
 <h1><a href="index.html"><b>Seed Vault</b></a></h1>
 <h2>Search artifacts by name, author, and more</h2>
+
+<!-- NEW: Advanced search button -->
+<a href="advanced-search.html" class="advanced-search-btn">🔍 Advanced Search</a>
 
 <!-- Stats Section -->
 <div class="stats-section" id="statsSection" style="display: none;">
@@ -221,6 +265,9 @@ h1 {
 <div class="centerenter">
   <input type="text" id="artInput" onkeyup="searchTable()" placeholder="Search by title, author, date..." title="Work search">
 </div>
+
+<!-- NEW: Access warning -->
+<div id="accessWarning" class="access-warning" style="display:none;"></div>
 
 <!-- Loading Message -->
 <div id="loadingMessage" class="loading">
@@ -257,10 +304,17 @@ h1 {
 let allArtifacts = [];
 let currentFilter = 'all';
 let userRole = 'guest';
+let currentUser = 'Guest';
 
 // Load artifacts from database when page loads
 window.addEventListener('load', async () => {
+  currentUser = localStorage.getItem('loggedInUser') || 'Guest';
   userRole = localStorage.getItem('role') || 'guest';
+  
+  // Display user info banner
+  document.getElementById('userInfoBanner').innerText = 
+    `Welcome, ${currentUser} (${userRole.toUpperCase()})`;
+  
   await loadArtifacts();
   setupFilterButtons();
 });
@@ -382,6 +436,8 @@ function displayArtifacts(artifacts) {
   const tbody = document.getElementById('artifactTableBody');
   tbody.innerHTML = '';
   
+  let hiddenCount = 0;
+  
   if (artifacts.length === 0) {
     document.getElementById('artTable').style.display = 'none';
     document.getElementById('noResults').style.display = 'block';
@@ -392,6 +448,14 @@ function displayArtifacts(artifacts) {
   document.getElementById('noResults').style.display = 'none';
   
   artifacts.forEach(artifact => {
+    const access = artifact.accessLevel || artifact.access_level;
+    
+    // Check if user can access this artifact
+    if (userRole !== 'admin' && access !== 'public' && access !== userRole) {
+      hiddenCount++;
+      return; // Skip this artifact
+    }
+    
     const row = document.createElement('tr');
     
     // Handle both naming conventions (uploadDate vs upload_date)
@@ -437,6 +501,15 @@ function displayArtifacts(artifacts) {
     
     tbody.appendChild(row);
   });
+  
+  // Show access warning if artifacts were hidden
+  const warningEl = document.getElementById('accessWarning');
+  if (hiddenCount > 0) {
+    warningEl.style.display = 'block';
+    warningEl.innerText = `⚠️ ${hiddenCount} artifact(s) hidden due to access restrictions`;
+  } else {
+    warningEl.style.display = 'none';
+  }
 }
 
 function filterArtifacts(filter, buttonElement) {
