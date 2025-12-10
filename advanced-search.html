@@ -413,69 +413,7 @@ let searchMetrics = {
   deniedCount: 0
 };
 
-// Sample artifact database
-const artifacts = [
-  {
-    id: 1,
-    title: "Rosetta Disk",
-    description: "Comprehensive language preservation archive containing over 1,500 languages",
-    uploaded_by: "The Long Now Foundation",
-    upload_date: "2004-06-03",
-    mimetype: "application/pdf",
-    access_level: "public",
-    tags: ["language", "preservation", "archive"]
-  },
-  {
-    id: 2,
-    title: "Traditional Basket Weaving Techniques",
-    description: "Ancient basket weaving methods passed down through generations",
-    uploaded_by: "Tribe 1 Elder",
-    upload_date: "2023-11-14",
-    mimetype: "image/jpeg",
-    access_level: "tribe1",
-    tags: ["craft", "traditional", "weaving"]
-  },
-  {
-    id: 3,
-    title: "Ancestral Stories Recording",
-    description: "Audio recording of tribal elder sharing traditional stories and legends",
-    uploaded_by: "Tribe 2 Historian",
-    upload_date: "2024-02-19",
-    mimetype: "audio/mpeg",
-    access_level: "tribe2",
-    tags: ["stories", "oral tradition", "history"]
-  },
-  {
-    id: 4,
-    title: "Harvest Festival Songs",
-    description: "Traditional songs performed during the annual harvest celebration",
-    uploaded_by: "Tribe 3 Elder",
-    upload_date: "2024-03-15",
-    mimetype: "audio/mpeg",
-    access_level: "tribe3",
-    tags: ["music", "festival", "ceremony"]
-  },
-  {
-    id: 5,
-    title: "Community Garden Guide",
-    description: "Guide to traditional agricultural practices and sustainable farming",
-    uploaded_by: "Public Contributor",
-    upload_date: "2024-04-20",
-    mimetype: "application/pdf",
-    access_level: "public",
-    tags: ["agriculture", "farming", "sustainability"]
-  },
-  {
-    id: 6,
-    title: "Language Learning Materials",
-    description: "Educational resources for learning indigenous language basics",
-    uploaded_by: "Language Committee",
-    upload_date: "2024-05-10",
-    mimetype: "application/pdf",
-    access_level: "public",
-    tags: ["language", "education", "learning"]
-  }
-];
+let artifacts = [];
 
 // ============================================================================
 // ACCESS CONTROL
@@ -654,7 +592,7 @@ function viewArtifact(id) {
     return;
   }
   
-  alert(`Viewing: ${artifact.title}\n\nIn production, this would open the full artifact view.`);
+  window.location.href = `view-artifact.html?id=${artifact.id}`;
 }
 
 function clearFilters() {
@@ -684,10 +622,39 @@ function updateStats() {
   document.getElementById('deniedCount').textContent = searchMetrics.deniedCount;
 }
 
+async function loadArtifacts() {
+  try {
+    const response = await fetch(`http://localhost:3000/api/files?role=${currentRole}`);
+    const data = await response.json();
+    
+    if (data.success && data.files) {
+      artifacts = data.files.map(file => ({
+        id: file.id || file.filename,
+        title: file.title || file.originalName || file.original_name,
+        description: file.description || '',
+        uploaded_by: file.uploadedBy || file.uploaded_by_name || 'Unknown',
+        upload_date: file.uploadDate || file.upload_date,
+        mimetype: file.mimetype || '',
+        access_level: file.accessLevel || file.access_level || 'public',
+        tags: file.tags || []
+      }));
+      
+      console.log('📚 Loaded', artifacts.length, 'artifacts from database');
+    } else {
+      console.warn('Failed to load artifacts, using empty list');
+      artifacts = [];
+    }
+  } catch (error) {
+    console.error('Error loading artifacts:', error);
+    artifacts = [];
+  }
+}
+
 // Initialize
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   console.log('🔍 Advanced Search Engine initialized');
   console.log('👤 User:', currentUser, '| Role:', currentRole);
+  await loadArtifacts();
 });
 </script>
 
