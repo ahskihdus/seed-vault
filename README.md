@@ -86,9 +86,9 @@ brew services start mysql
 
 ### Windows: 
 Download from https://dev.mysql.com/downloads/mysql/
-    1) Run the installer and follow the setup.
-    2) Crucial: During setup, you will be prompted to set a root password. Remember this password as you will need it for the next step.
-    3) The installer will typically set up the MySQL server as a Windows service and start it automatically.
+- Run the installer and follow the setup.
+- Crucial: During setup, you will be prompted to set a root password. Remember this password as you will need it for the next step.
+- The installer will typically set up the MySQL server as a Windows service and start it automatically.
 
 ### Linux:
 ```bash
@@ -110,6 +110,10 @@ This installs:
 - pdf-parse (PDF text extraction)
 
 ## 5. CREATE MYSQL DATABASE
+Windows: Since the original script uses Linux shell syntax, you must run the SQL commands either interactively or by saving them to a file.
+- Copy all the SQL commands 
+- Save them into a new plain text file named setup.sql inside your seed-vault directory.
+
 ```bash
 mysql -u root << EOF
 CREATE DATABASE seedvault;
@@ -188,9 +192,20 @@ INSERT INTO tribes (name, description, contact_email) VALUES
 EOF
 ```
 
+- Windows: Open your terminal in the seed-vault directory and run the following command. You will be prompted for the root password you set:
+``` bash
+mysql -u root -p < setup.sql
+```
+
 ## 6. CREATE UPLOAD DIRECTORIES
+If using PowerShell/Git Bash:
 ```bash
 mkdir -p uploads/public uploads/tribe1 uploads/tribe2 uploads/tribe3
+```
+If using Command Prompt:
+``` bash
+md uploads
+md uploads\public uploads\tribe1 uploads\tribe2 uploads\tribe3
 ```
 
 ## 7. UPDATE DATABASE PASSWORD IN SERVER FILE (if needed)
