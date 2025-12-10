@@ -113,7 +113,7 @@ This installs:
 Windows: 
 - Since the original script uses Linux shell syntax, you must run the SQL commands either interactively or by saving them to a file.
 - Copy all the SQL commands 
-- Save them into a new plain text file named setup.sql inside your seed-vault directory.
+- Save them into a new plain text file named schema.sql inside your seed-vault directory. (IF THIS ALREADY EXISTS IN YOUR SEED VAULT FOLDER CAN SKIP THESE STEPS)
 
 ```bash
 mysql -u root << EOF
