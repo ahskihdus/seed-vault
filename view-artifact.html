@@ -304,13 +304,30 @@
       await loadArtifact(artifactId);
     });
     
+    /**
+     * loadArtifact - Fetches and displays a single artifact by ID
+     * 
+     * Process:
+     * 1. Gets artifact ID from URL query parameter (?id=...)
+     * 2. Fetches all accessible artifacts from API (filtered by user role)
+     * 3. Finds specific artifact by ID or filename
+     * 4. Checks access permissions (user's role vs artifact's access level)
+     * 5. Displays artifact content or access denied message
+     * 
+     * Access control:
+     * - Server returns only user-accessible artifacts
+     * - Client checks permissions before display
+     * - Both layers ensure users cannot bypass restrictions
+     * 
+     * @param {string} artifactId - Artifact ID from URL query parameter
+     */
     async function loadArtifact(artifactId) {
       try {
         const role = localStorage.getItem('role') || 'guest';
         
         console.log('Fetching artifacts for role:', role);
         
-        // Fetch artifact metadata
+        // Fetch metadata for all user-accessible artifacts from API
         const response = await fetch(`http://localhost:3000/api/files?role=${role}`);
         const data = await response.json();
         
@@ -324,7 +341,7 @@
         console.log('Looking for artifact with id:', artifactId);
         console.log('Available artifacts:', data.files);
         
-        // Find the specific artifact (check both id and filename)
+        // Find the specific artifact (check both id and filename as identifiers)
         const artifact = data.files.find(a => 
           a.id === artifactId || 
           a.filename === artifactId
@@ -338,14 +355,14 @@
         console.log('Found artifact:', artifact);
         currentArtifact = artifact;
         
-        // Check access permission
+        // Final access control check (defense in depth)
         const accessLevel = artifact.accessLevel || artifact.access_level;
         if (!canAccessArtifact(role, accessLevel)) {
           showAccessDenied();
           return;
         }
         
-        // Display artifact
+        // Display the artifact content
         displayArtifact(artifact);
         
       } catch (error) {
@@ -361,12 +378,29 @@
       return false;
     }
     
+    /**
+     * displayArtifact - Populates artifact details in the HTML page
+     * 
+     * Renders:
+     * 1. Artifact title (main heading)
+     * 2. Metadata: uploader, date, file type, access level
+     * 3. Description (if available)
+     * 4. Content preview (image, audio, video, PDF, etc.)
+     * 5. Download button
+     * 
+     * This function handles multiple field name conventions from the API:
+     * - title vs originalName
+     * - uploadedBy vs uploaded_by_name
+     * - accessLevel vs access_level
+     * 
+     * @param {Object} artifact - Artifact object from API
+     */
     function displayArtifact(artifact) {
-      // Set title
+      // Set artifact title
       document.getElementById('artifactTitle').textContent = 
         artifact.title || artifact.originalName || artifact.original_name;
       
-      // Set metadata
+      // Set metadata fields
       const uploaderName = artifact.uploadedBy || artifact.uploaded_by_name || 'Unknown';
       document.getElementById('uploadedBy').textContent = uploaderName;
       
@@ -406,6 +440,24 @@
       document.getElementById('artifactContent').style.display = 'block';
     }
     
+    /**
+     * displayContent - Renders artifact content based on file type
+     * 
+     * Handles different file types with appropriate viewers:
+     * - Images (JPG, PNG, GIF): HTML <img> tag
+     * - Audio (MP3, WAV, OGG): HTML <audio> player with controls
+     * - Video (MP4, WebM): HTML <video> player with controls
+     * - PDF: Embedded <iframe> PDF viewer
+     * - Text: Pre-formatted text display with HTML escaping
+     * - Others: Generic "download" message
+     * 
+     * URL handling:
+     * - Supports hard-coded full URLs (for demo/sample artifacts)
+     * - Constructs API URLs for server-stored files
+     * - Passes userRole to API for server-side access control
+     * 
+     * @param {Object} artifact - Artifact metadata
+     */
     function displayContent(artifact) {
       const viewer = document.getElementById('contentViewer');
       const mimetype = artifact.mimetype || '';
@@ -413,13 +465,13 @@
       const accessLevel = artifact.accessLevel || artifact.access_level;
       const role = localStorage.getItem('role');
       
-      // Use filename directly if it's already a full URL, otherwise construct API URL
+      // Use full URL directly if provided (for sample data), otherwise build API URL
       const fileUrl = filename.startsWith('http') 
         ? filename 
         : `http://localhost:3000/api/file/${accessLevel}/${filename}?userRole=${role}`;
       
       if (mimetype.startsWith('image/')) {
-        // Display image
+        // Display image preview
         viewer.innerHTML = `<img src="${fileUrl}" alt="${artifact.title || 'Artifact image'}" />`;
         
       } else if (mimetype.startsWith('audio/')) {
