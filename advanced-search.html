@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SeedVault - Advanced Search</title>
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+<style>
+body {
+  background-color: #e1d7c6;
+  margin: 0;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.header {
+  background: #281d05;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header h1 {
+  color: #e1d7c6;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.header a {
+  color: #e1d7c6;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: #0f6939;
+  border-radius: 0.5rem;
+  transition: background 0.3s;
+}
+
+.header a:hover {
+  background: #0d512d;
+}
+
+.search-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.search-header {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(40, 29, 5, 0.1);
+  border: 2px solid #b1aca2;
+}
+
+.search-header h2 {
+  color: #0d512d;
+  margin: 0 0 0.5rem 0;
+}
+
+.search-header p {
+  color: #3b2a19;
+  margin: 0 0 1.5rem 0;
+}
+
+.main-search {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.main-search input {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #b1aca2;
+  border-radius: 0.5rem;
+  background: #e1d7c6;
+  font-size: 1rem;
+  color: #281d05;
+}
+
+.main-search input:focus {
+  outline: none;
+  border-color: #0f6939;
+}
+
+.main-search button {
+  padding: 1rem 2rem;
+  background: #0f6939;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.main-search button:hover {
+  background: #0d512d;
+}
+
+.advanced-filters {
+  background: #e1d7c6;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.advanced-filters h3 {
+  color: #281d05;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  color: #281d05;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.6rem;
+  border: 2px solid #b1aca2;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #281d05;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: #0f6939;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.clear-btn {
+  padding: 0.6rem 1.2rem;
+  background: #865e0d;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.clear-btn:hover {
+  background: #3b2a19;
+}
+
+.stats-bar {
+  background: #281d05;
+  color: #e1d7c6;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f6939;
+}
+
+.results-container {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(40, 29, 5, 0.1);
+  border: 2px solid #b1aca2;
+  min-height: 400px;
+}
+
+.search-summary {
+  color: #3b2a19;
+  font-size: 0.95rem;
+  padding: 1rem;
+  background: #e1d7c6;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.result-card {
+  background: #ffffff;
+  border: 2px solid #b1aca2;
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.result-card:hover {
+  transform: translateY(-2px);
+  border-color: #0f6939;
+  box-shadow: 0 4px 12px rgba(15, 105, 57, 0.2);
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.result-header h3 {
+  color: #0d512d;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.access-badge {
+  background: #0f6939;
+  color: #ffffff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.access-badge.tribe1 {
+  background: #865e0d;
+}
+
+.access-badge.tribe2 {
+  background: #3b2a19;
+}
+
+.access-badge.tribe3 {
+  background: #281d05;
+}
+
+.result-description {
+  color: #3b2a19;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.result-meta {
+  display: flex;
+  gap: 1.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #3b2a19;
+}
+
+.no-results h3 {
+  font-size: 1.3rem;
+  color: #865e0d;
+  margin-bottom: 0.5rem;
+}
+
+.access-warning {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: #856404;
+  font-weight: 600;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #3b2a19;
+  font-size: 1.1rem;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌱 SeedVault Advanced Search</h1>
+  <a href="seed.html">← Back to Browse</a>
+</div>
+
+<div class="search-container">
+  <div class="search-header">
+    <h2>🔍 Advanced Search Engine</h2>
+    <p>Search across all accessible cultural artifacts with advanced filters and real-time monitoring</p>
+    
+    <div class="main-search">
+      <input 
+        type="text" 
+        id="searchQuery" 
+        placeholder="Search by title, author, description, tags..."
+        onkeypress="if(event.key==='Enter') performSearch()"
+      >
+      <button onclick="performSearch()">Search</button>
+    </div>
+
+    <div class="advanced-filters">
+      <h3>Advanced Filters</h3>
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label for="accessFilter">Access Level</label>
+          <select id="accessFilter">
+            <option value="">All Accessible</option>
+            <option value="public">Public</option>
+            <option value="tribe1">Tribe 1</option>
+            <option value="tribe2">Tribe 2</option>
+            <option value="tribe3">Tribe 3</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="typeFilter">File Type</label>
+          <select id="typeFilter">
+            <option value="">All Types</option>
+            <option value="image">Image</option>
+            <option value="audio">Audio</option>
+            <option value="video">Video</option>
+            <option value="pdf">PDF</option>
+            <option value="document">Document</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="dateFrom">Date From</label>
+          <input type="date" id="dateFrom">
+        </div>
+
+        <div class="filter-group">
+          <label for="dateTo">Date To</label>
+          <input type="date" id="dateTo">
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button class="clear-btn" onclick="clearFilters()">Clear All Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-item">
+      <div class="stat-value" id="queryCount">0</div>
+      <div>Queries</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="avgLatency">0ms</div>
+      <div>Avg Latency</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="resultsCount">0</div>
+      <div>Results</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="deniedCount">0</div>
+      <div>Access Denied</div>
+    </div>
+  </div>
+
+  <!-- Access Warning -->
+  <div id="accessWarning" class="access-warning" style="display: none;"></div>
+
+  <!-- Results -->
+  <div class="results-container">
+    <div id="loadingState" class="loading">
+      Enter a search query or apply filters to find artifacts
+    </div>
+    <div id="resultsArea" style="display: none;"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// ADVANCED SEARCH ENGINE WITH ACCESS CONTROL
+// ============================================================================
+
+let currentUser = localStorage.getItem('loggedInUser') || 'guest';
+let currentRole = localStorage.getItem('role') || 'guest';
+let searchMetrics = {
+  queryCount: 0,
+  totalLatency: 0,
+  deniedCount: 0
+};
+
+// Sample artifact database
+const artifacts = [
+  {
+    id: 1,
+    title: "Rosetta Disk",
+    description: "Comprehensive language preservation archive containing over 1,500 languages",
+    uploaded_by: "The Long Now Foundation",
+    upload_date: "2004-06-03",
+    mimetype: "application/pdf",
+    access_level: "public",
+    tags: ["language", "preservation", "archive"]
+  },
+  {
+    id: 2,
+    title: "Traditional Basket Weaving Techniques",
+    description: "Ancient basket weaving methods passed down through generations",
+    uploaded_by: "Tribe 1 Elder",
+    upload_date: "2023-11-14",
+    mimetype: "image/jpeg",
+    access_level: "tribe1",
+    tags: ["craft", "traditional", "weaving"]
+  },
+  {
+    id: 3,
+    title: "Ancestral Stories Recording",
+    description: "Audio recording of tribal elder sharing traditional stories and legends",
+    uploaded_by: "Tribe 2 Historian",
+    upload_date: "2024-02-19",
+    mimetype: "audio/mpeg",
+    access_level: "tribe2",
+    tags: ["stories", "oral tradition", "history"]
+  },
+  {
+    id: 4,
+    title: "Harvest Festival Songs",
+    description: "Traditional songs performed during the annual harvest celebration",
+    uploaded_by: "Tribe 3 Elder",
+    upload_date: "2024-03-15",
+    mimetype: "audio/mpeg",
+    access_level: "tribe3",
+    tags: ["music", "festival", "ceremony"]
+  },
+  {
+    id: 5,
+    title: "Community Garden Guide",
+    description: "Guide to traditional agricultural practices and sustainable farming",
+    uploaded_by: "Public Contributor",
+    upload_date: "2024-04-20",
+    mimetype: "application/pdf",
+    access_level: "public",
+    tags: ["agriculture", "farming", "sustainability"]
+  },
+  {
+    id: 6,
+    title: "Language Learning Materials",
+    description: "Educational resources for learning indigenous language basics",
+    uploaded_by: "Language Committee",
+    upload_date: "2024-05-10",
+    mimetype: "application/pdf",
+    access_level: "public",
+    tags: ["language", "education", "learning"]
+  }
+];
+
+// ============================================================================
+// ACCESS CONTROL
+// ============================================================================
+
+function canAccess(artifact) {
+  const startTime = performance.now();
+  
+  let allowed = false;
+  
+  if (currentRole === 'admin') {
+    allowed = true;
+  } else if (artifact.access_level === 'public') {
+    allowed = true;
+  } else if (currentRole === artifact.access_level) {
+    allowed = true;
+  }
+  
+  const latency = performance.now() - startTime;
+  
+  if (!allowed) {
+    searchMetrics.deniedCount++;
+    console.error('🚨 Access denied:', {
+      user: currentUser,
+      role: currentRole,
+      artifact: artifact.title,
+      required: artifact.access_level
+    });
+  }
+  
+  return allowed;
+}
+
+// ============================================================================
+// SEARCH ENGINE
+// ============================================================================
+
+function performSearch() {
+  const startTime = performance.now();
+  searchMetrics.queryCount++;
+  
+  const query = document.getElementById('searchQuery').value.toLowerCase();
+  const accessFilter = document.getElementById('accessFilter').value;
+  const typeFilter = document.getElementById('typeFilter').value;
+  const dateFrom = document.getElementById('dateFrom').value;
+  const dateTo = document.getElementById('dateTo').value;
+  
+  console.log('🔍 Search initiated:', { query, accessFilter, typeFilter, dateFrom, dateTo });
+  
+  // Filter artifacts
+  let results = artifacts.filter(artifact => {
+    // Text search
+    if (query) {
+      const searchText = `${artifact.title} ${artifact.description} ${artifact.uploaded_by} ${artifact.tags.join(' ')}`.toLowerCase();
+      if (!searchText.includes(query)) return false;
+    }
+    
+    // Access filter
+    if (accessFilter && artifact.access_level !== accessFilter) return false;
+    
+    // Type filter
+    if (typeFilter) {
+      const fileType = getFileType(artifact.mimetype);
+      if (fileType.toLowerCase() !== typeFilter.toLowerCase()) return false;
+    }
+    
+    // Date filters
+    if (dateFrom && new Date(artifact.upload_date) < new Date(dateFrom)) return false;
+    if (dateTo && new Date(artifact.upload_date) > new Date(dateTo)) return false;
+    
+    return true;
+  });
+  
+  // Apply access control
+  const totalResults = results.length;
+  results = results.filter(artifact => canAccess(artifact));
+  const accessibleResults = results.length;
+  const deniedResults = totalResults - accessibleResults;
+  
+  // Calculate latency
+  const latency = performance.now() - startTime;
+  searchMetrics.totalLatency += latency;
+  
+  // Show warning if some results were hidden
+  if (deniedResults > 0) {
+    const warning = document.getElementById('accessWarning');
+    warning.textContent = `⚠️ ${deniedResults} result(s) hidden due to access restrictions`;
+    warning.style.display = 'block';
+  } else {
+    document.getElementById('accessWarning').style.display = 'none';
+  }
+  
+  // Alert if slow query
+  if (latency > 500) {
+    console.warn('🐌 SLOW QUERY:', {
+      query: query,
+      latency: latency + 'ms',
+      results: results.length
+    });
+  }
+  
+  // Display results
+  displayResults(results, query, latency);
+  
+  // Update stats
+  updateStats();
+}
+
+function displayResults(results, query, latency) {
+  const loadingState = document.getElementById('loadingState');
+  const resultsArea = document.getElementById('resultsArea');
+  
+  loadingState.style.display = 'none';
+  resultsArea.style.display = 'block';
+  
+  if (results.length === 0) {
+    resultsArea.innerHTML = `
+      <div class="no-results">
+        <h3>No results found</h3>
+        <p>Try adjusting your search terms or filters</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = `
+    <div class="search-summary">
+      Found ${results.length} result(s) in ${latency.toFixed(2)}ms
+    </div>
+  `;
+  
+  results.forEach(artifact => {
+    const fileType = getFileType(artifact.mimetype);
+    const badgeClass = artifact.access_level;
+    
+    html += `
+      <div class="result-card" onclick="viewArtifact(${artifact.id})">
+        <div class="result-header">
+          <h3>${highlightText(artifact.title, query)}</h3>
+          <span class="access-badge ${badgeClass}">${artifact.access_level}</span>
+        </div>
+        <p class="result-description">${highlightText(artifact.description, query)}</p>
+        <div class="result-meta">
+          <span>👤 ${artifact.uploaded_by}</span>
+          <span>📅 ${new Date(artifact.upload_date).toLocaleDateString()}</span>
+          <span>📄 ${fileType}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  resultsArea.innerHTML = html;
+}
+
+function highlightText(text, query) {
+  if (!query) return text;
+  const regex = new RegExp(`(${query})`, 'gi');
+  return text.replace(regex, '<strong style="background: #fff3cd;">$1</strong>');
+}
+
+function getFileType(mimetype) {
+  if (!mimetype) return 'Document';
+  if (mimetype.startsWith('image/')) return 'Image';
+  if (mimetype.startsWith('audio/')) return 'Audio';
+  if (mimetype.startsWith('video/')) return 'Video';
+  if (mimetype.includes('pdf')) return 'PDF';
+  return 'Document';
+}
+
+function viewArtifact(id) {
+  const artifact = artifacts.find(a => a.id === id);
+  if (!artifact) return;
+  
+  if (!canAccess(artifact)) {
+    alert(`⛔ Access Denied\n\nYou don't have permission to view "${artifact.title}"\n\nYour role: ${currentRole}\nRequired: ${artifact.access_level}`);
+    return;
+  }
+  
+  alert(`Viewing: ${artifact.title}\n\nIn production, this would open the full artifact view.`);
+}
+
+function clearFilters() {
+  document.getElementById('searchQuery').value = '';
+  document.getElementById('accessFilter').value = '';
+  document.getElementById('typeFilter').value = '';
+  document.getElementById('dateFrom').value = '';
+  document.getElementById('dateTo').value = '';
+  
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('loadingState').textContent = 'Enter a search query or apply filters to find artifacts';
+  document.getElementById('resultsArea').style.display = 'none';
+  document.getElementById('accessWarning').style.display = 'none';
+}
+
+function updateStats() {
+  document.getElementById('queryCount').textContent = searchMetrics.queryCount;
+  
+  const avgLatency = searchMetrics.queryCount > 0 
+    ? (searchMetrics.totalLatency / searchMetrics.queryCount).toFixed(0)
+    : 0;
+  document.getElementById('avgLatency').textContent = avgLatency + 'ms';
+  
+  const resultsCount = document.querySelectorAll('.result-card').length;
+  document.getElementById('resultsCount').textContent = resultsCount;
+  
+  document.getElementById('deniedCount').textContent = searchMetrics.deniedCount;
+}
+
+// Initialize
+window.addEventListener('load', () => {
+  console.log('🔍 Advanced Search Engine initialized');
+  console.log('👤 User:', currentUser, '| Role:', currentRole);
+});
+</script>
+
+</body>
+</html>
