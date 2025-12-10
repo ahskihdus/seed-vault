@@ -2,15 +2,30 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
+<!-- Makes the site responsive for all device sizes -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>SeedVault - Advanced Search</title>
+
+<!-- Google font -->
 <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,900&display=swap" rel="stylesheet">
+
 <style>
+
+  /* =======================
+     GLOBAL STYLING
+  ======================= */
+
 body {
   background-color: #e1d7c6;
   margin: 0;
   font-family: 'Nunito Sans', sans-serif;
 }
+
+  /* =======================
+     HEADER BAR STYLING
+  ======================= */
 
 .header {
   background: #281d05;
@@ -41,6 +56,10 @@ body {
   background: #0d512d;
 }
 
+  /* =======================
+     SEARCH CONTAINER
+  ======================= */
+
 .search-container {
   max-width: 1200px;
   margin: 2rem auto;
@@ -66,6 +85,10 @@ body {
   margin: 0 0 1.5rem 0;
 }
 
+/* =======================
+   MAIN SEARCH BAR
+======================= */
+
 .main-search {
   display: flex;
   gap: 1rem;
@@ -82,6 +105,7 @@ body {
   color: #281d05;
 }
 
+/* Highlights active typing area */
 .main-search input:focus {
   outline: none;
   border-color: #0f6939;
@@ -96,12 +120,15 @@ body {
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
-  transition: background 0.3s;
 }
 
 .main-search button:hover {
   background: #0d512d;
 }
+
+/* =======================
+   FILTERING CONTROLS
+======================= */
 
 .advanced-filters {
   background: #e1d7c6;
@@ -110,228 +137,117 @@ body {
   margin-bottom: 1rem;
 }
 
-.advanced-filters h3 {
-  color: #281d05;
-  margin: 0 0 1rem 0;
-  font-size: 1.1rem;
-}
-
 .filter-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
-.filter-group {
-  display: flex;
-  flex-direction: column;
-}
-
 .filter-group label {
-  color: #281d05;
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
 }
 
-.filter-group select,
-.filter-group input {
+.filter-group input,
+.filter-group select {
   padding: 0.6rem;
-  border: 2px solid #b1aca2;
   border-radius: 0.5rem;
-  background: #ffffff;
-  color: #281d05;
+  border: 2px solid #b1aca2;
 }
 
-.filter-group select:focus,
-.filter-group input:focus {
-  outline: none;
-  border-color: #0f6939;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
+/* Reset button */
 .clear-btn {
-  padding: 0.6rem 1.2rem;
   background: #865e0d;
-  color: #ffffff;
+  color: white;
   border: none;
+  padding: 0.6rem 1.2rem;
   border-radius: 0.5rem;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s;
 }
 
 .clear-btn:hover {
   background: #3b2a19;
 }
 
+/* =======================
+   STATS BAR
+======================= */
+
 .stats-bar {
   background: #281d05;
   color: #e1d7c6;
   padding: 1rem;
-  border-radius: 0.5rem;
   display: flex;
   justify-content: space-around;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-}
-
-.stat-item {
-  text-align: center;
+  border-radius: 0.5rem;
 }
 
 .stat-value {
-  font-size: 1.5rem;
-  font-weight: 700;
   color: #0f6939;
+  font-weight: bold;
 }
+
+/* =======================
+   SEARCH RESULTS
+======================= */
 
 .results-container {
-  background: #ffffff;
+  background: white;
   border-radius: 1rem;
   padding: 2rem;
-  box-shadow: 0 4px 12px rgba(40, 29, 5, 0.1);
-  border: 2px solid #b1aca2;
-  min-height: 400px;
-}
-
-.search-summary {
-  color: #3b2a19;
-  font-size: 0.95rem;
-  padding: 1rem;
-  background: #e1d7c6;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
+  margin-top: 1rem;
 }
 
 .result-card {
-  background: #ffffff;
   border: 2px solid #b1aca2;
-  border-radius: 0.8rem;
-  padding: 1.5rem;
   margin-bottom: 1rem;
-  transition: all 0.3s;
+  padding: 1rem;
+  border-radius: 0.8rem;
   cursor: pointer;
 }
 
 .result-card:hover {
-  transform: translateY(-2px);
   border-color: #0f6939;
-  box-shadow: 0 4px 12px rgba(15, 105, 57, 0.2);
 }
 
-.result-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.8rem;
-}
+/* =======================
+   JAVASCRIPT LOGIC
+======================= */
 
-.result-header h3 {
-  color: #0d512d;
-  margin: 0;
-  font-size: 1.3rem;
-}
-
-.access-badge {
-  background: #0f6939;
-  color: #ffffff;
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.4rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.access-badge.tribe1 {
-  background: #865e0d;
-}
-
-.access-badge.tribe2 {
-  background: #3b2a19;
-}
-
-.access-badge.tribe3 {
-  background: #281d05;
-}
-
-.result-description {
-  color: #3b2a19;
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.result-meta {
-  display: flex;
-  gap: 1.5rem;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.no-results {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #3b2a19;
-}
-
-.no-results h3 {
-  font-size: 1.3rem;
-  color: #865e0d;
-  margin-bottom: 0.5rem;
-}
-
-.access-warning {
-  background: #fff3cd;
-  border: 2px solid #ffc107;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  color: #856404;
-  font-weight: 600;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: #3b2a19;
-  font-size: 1.1rem;
-}
 </style>
 </head>
+
 <body>
 
+<!-- Top Navigation -->
 <div class="header">
   <h1>🌱 SeedVault Advanced Search</h1>
   <a href="seed.html">← Back to Browse</a>
 </div>
 
 <div class="search-container">
+
+  <!-- Search UI -->
   <div class="search-header">
     <h2>🔍 Advanced Search Engine</h2>
-    <p>Search across all accessible cultural artifacts with advanced filters and real-time monitoring</p>
-    
+    <p>Search by keyword, filter by access, type, and date</p>
+
+    <!-- Text search input -->
     <div class="main-search">
-      <input 
-        type="text" 
-        id="searchQuery" 
-        placeholder="Search by title, author, description, tags..."
-        onkeypress="if(event.key==='Enter') performSearch()"
-      >
+      <input id="searchQuery" placeholder="Search titles, authors, tags..."
+             onkeypress="if(event.key==='Enter') performSearch()">
       <button onclick="performSearch()">Search</button>
     </div>
-
+    
+    <!-- Filters -->
     <div class="advanced-filters">
       <h3>Advanced Filters</h3>
       <div class="filter-grid">
+
+        <!-- Access filter -->
         <div class="filter-group">
-          <label for="accessFilter">Access Level</label>
+          <label>Access Level</label>
           <select id="accessFilter">
-            <option value="">All Accessible</option>
+            <option value="">All</option>
             <option value="public">Public</option>
             <option value="tribe1">Tribe 1</option>
             <option value="tribe2">Tribe 2</option>
@@ -339,10 +255,11 @@ body {
           </select>
         </div>
 
+        <!-- Type filter -->
         <div class="filter-group">
-          <label for="typeFilter">File Type</label>
+          <label>File Type</label>
           <select id="typeFilter">
-            <option value="">All Types</option>
+            <option value="">All</option>
             <option value="image">Image</option>
             <option value="audio">Audio</option>
             <option value="video">Video</option>
@@ -351,349 +268,147 @@ body {
           </select>
         </div>
 
+        <!-- Date filters -->
         <div class="filter-group">
-          <label for="dateFrom">Date From</label>
+          <label>Date From</label>
           <input type="date" id="dateFrom">
         </div>
 
         <div class="filter-group">
-          <label for="dateTo">Date To</label>
+          <label>Date To</label>
           <input type="date" id="dateTo">
         </div>
+
       </div>
 
-      <div class="filter-actions">
-        <button class="clear-btn" onclick="clearFilters()">Clear All Filters</button>
-      </div>
+      <button class="clear-btn" onclick="clearFilters()">Clear Filters</button>
     </div>
   </div>
 
-  <!-- Performance Stats -->
-  <div class="stats-bar" id="statsBar">
-    <div class="stat-item">
-      <div class="stat-value" id="queryCount">0</div>
-      <div>Queries</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" id="avgLatency">0ms</div>
-      <div>Avg Latency</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" id="resultsCount">0</div>
-      <div>Results</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value" id="deniedCount">0</div>
-      <div>Access Denied</div>
-    </div>
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div>Queries: <span id="queryCount">0</span></div>
+    <div>Avg Latency: <span id="avgLatency">0ms</span></div>
+    <div>Results: <span id="resultsCount">0</span></div>
+    <div>Denied: <span id="deniedCount">0</span></div>
   </div>
-
-  <!-- Access Warning -->
-  <div id="accessWarning" class="access-warning" style="display: none;"></div>
 
   <!-- Results -->
   <div class="results-container">
-    <div id="loadingState" class="loading">
-      Enter a search query or apply filters to find artifacts
-    </div>
-    <div id="resultsArea" style="display: none;"></div>
+    <div id="loadingState">Enter a query to begin searching</div>
+    <div id="resultsArea"></div>
   </div>
+
 </div>
 
 <script>
-// ============================================================================
-// ADVANCED SEARCH ENGINE WITH ACCESS CONTROL
-// ============================================================================
 
-  
-// Get the currently logged in user and role from browser storage
-let currentUser = localStorage.getItem('loggedInUser') || 'guest';
+/*
+  Holds logged in user role for permission checking
+*/
 let currentRole = localStorage.getItem('role') || 'guest';
-let searchMetrics = {
-  queryCount: 0,
+
+/*
+  Tracks performance and activity
+*/
+let metrics = {
+  queries: 0,
   totalLatency: 0,
-  deniedCount: 0
+  denied: 0
 };
 
+/*
+  Stores files pulled from server
+*/
 let artifacts = [];
 
-// ============================================================================
-// ACCESS CONTROL
-// ============================================================================
 
-function canAccess(artifact) {
-  const startTime = performance.now();
-  
-  let allowed = false;
-  
-  if (currentRole === 'admin') {
-    allowed = true;
-  } else if (artifact.access_level === 'public') {
-    allowed = true;
-  } else if (currentRole === artifact.access_level) {
-    allowed = true;
-  }
-  
-  const latency = performance.now() - startTime;
-  
-  if (!allowed) {
-    searchMetrics.deniedCount++;
-    console.error('🚨 Access denied:', {
-      user: currentUser,
-      role: currentRole,
-      artifact: artifact.title,
-      required: artifact.access_level
-    });
-  }
-  
-  return allowed;
+/*
+  Determines if user can view file
+*/
+function canAccess(a) {
+  if (currentRole === 'admin') return true;
+  if (a.access_level === 'public') return true;
+  return a.access_level === currentRole;
 }
 
-// ============================================================================
-// SEARCH ENGINE
-// ============================================================================
-
-/**
- * performSearch - Executes advanced search with multiple filter criteria
- * 
- * Features:
- * 1. Text search across title, description, author, tags
- * 2. Filter by access level (public, tribe1/2/3)
- * 3. Filter by file type (image, audio, video, pdf, document)
- * 4. Filter by date range (from/to)
- * 5. Access control enforcement (server-side filtering)
- * 6. Performance metrics tracking (query count, latency)
- * 
- * The function highlights matching text in results and tracks performance.
- * Results are sorted by relevance and limited by user permissions.
- */
+/*
+  Performs keyword + filter search
+*/
 function performSearch() {
-  const startTime = performance.now();
-  searchMetrics.queryCount++;
-  
-  // Gather filter criteria from HTML form
+  const start = performance.now();
+  metrics.queries++;
+
   const query = document.getElementById('searchQuery').value.toLowerCase();
-  const accessFilter = document.getElementById('accessFilter').value;
-  const typeFilter = document.getElementById('typeFilter').value;
-  const dateFrom = document.getElementById('dateFrom').value;
-  const dateTo = document.getElementById('dateTo').value;
-  
-  console.log('🔍 Search initiated:', { query, accessFilter, typeFilter, dateFrom, dateTo });
-  
-  // Filter artifacts
-  let results = artifacts.filter(artifact => {
-    // Text search
-    if (query) {
-      const searchText = `${artifact.title} ${artifact.description} ${artifact.uploaded_by} ${artifact.tags.join(' ')}`.toLowerCase();
-      if (!searchText.includes(query)) return false;
-    }
-    
-    // Access filter
-    if (accessFilter && artifact.access_level !== accessFilter) return false;
-    
-    // Type filter
-    if (typeFilter) {
-      const fileType = getFileType(artifact.mimetype);
-      if (fileType.toLowerCase() !== typeFilter.toLowerCase()) return false;
-    }
-    
-    // Date filters
-    if (dateFrom && new Date(artifact.upload_date) < new Date(dateFrom)) return false;
-    if (dateTo && new Date(artifact.upload_date) > new Date(dateTo)) return false;
-    
-    return true;
+  const access = document.getElementById('accessFilter').value;
+  const type = document.getElementById('typeFilter').value;
+
+  let results = artifacts.filter(a => {
+    if (query && !(a.title + a.description).toLowerCase().includes(query)) return false;
+    if (access && a.access_level !== access) return false;
+    if (type && getType(a.mimetype) !== type) return false;
+    return canAccess(a);
   });
-  
-  // Apply access control
-  const totalResults = results.length;
-  results = results.filter(artifact => canAccess(artifact));
-  const accessibleResults = results.length;
-  const deniedResults = totalResults - accessibleResults;
-  
-  // Calculate latency
-  const latency = performance.now() - startTime;
-  searchMetrics.totalLatency += latency;
-  
-  // Show warning if some results were hidden
-  if (deniedResults > 0) {
-    const warning = document.getElementById('accessWarning');
-    warning.textContent = `⚠️ ${deniedResults} result(s) hidden due to access restrictions`;
-    warning.style.display = 'block';
-  } else {
-    document.getElementById('accessWarning').style.display = 'none';
-  }
-  
-  // Alert if slow query
-  if (latency > 500) {
-    console.warn('🐌 SLOW QUERY:', {
-      query: query,
-      latency: latency + 'ms',
-      results: results.length
-    });
-  }
-  
-  // Display results
-  displayResults(results, query, latency);
-  
-  // Update stats
+
+  const time = performance.now() - start;
+  metrics.totalLatency += time;
+
+  displayResults(results, time);
   updateStats();
 }
 
-function displayResults(results, query, latency) {
-  const loadingState = document.getElementById('loadingState');
-  const resultsArea = document.getElementById('resultsArea');
-  
-  loadingState.style.display = 'none';
-  resultsArea.style.display = 'block';
-  
-  if (results.length === 0) {
-    resultsArea.innerHTML = `
-      <div class="no-results">
-        <h3>No results found</h3>
-        <p>Try adjusting your search terms or filters</p>
-      </div>
-    `;
-    return;
-  }
-  
-  let html = `
-    <div class="search-summary">
-      Found ${results.length} result(s) in ${latency.toFixed(2)}ms
-    </div>
+/*
+  Displays results visually
+*/
+function displayResults(res, time) {
+  document.getElementById('resultsArea').innerHTML = `
+    <p>Found ${res.length} in ${time.toFixed(2)}ms</p>
+    ${res.map(r => `<div class="result-card">${r.title}</div>`).join("")}
   `;
-  
-  results.forEach(artifact => {
-    const fileType = getFileType(artifact.mimetype);
-    const badgeClass = artifact.access_level;
-    
-    html += `
-      <div class="result-card" onclick="viewArtifact(${artifact.id})">
-        <div class="result-header">
-          <h3>${highlightText(artifact.title, query)}</h3>
-          <span class="access-badge ${badgeClass}">${artifact.access_level}</span>
-        </div>
-        <p class="result-description">${highlightText(artifact.description, query)}</p>
-        <div class="result-meta">
-          <span>👤 ${artifact.uploaded_by}</span>
-          <span>📅 ${new Date(artifact.upload_date).toLocaleDateString()}</span>
-          <span>📄 ${fileType}</span>
-        </div>
-      </div>
-    `;
-  });
-  
-  resultsArea.innerHTML = html;
 }
 
-function highlightText(text, query) {
-  if (!query) return text;
-  const regex = new RegExp(`(${query})`, 'gi');
-  return text.replace(regex, '<strong style="background: #fff3cd;">$1</strong>');
-}
-
-function getFileType(mimetype) {
-  if (!mimetype) return 'Document';
-  if (mimetype.startsWith('image/')) return 'Image';
-  if (mimetype.startsWith('audio/')) return 'Audio';
-  if (mimetype.startsWith('video/')) return 'Video';
-  if (mimetype.includes('pdf')) return 'PDF';
-  return 'Document';
-}
-
-function viewArtifact(id) {
-  const artifact = artifacts.find(a => a.id === id);
-  if (!artifact) return;
-  
-  if (!canAccess(artifact)) {
-    alert(`⛔ Access Denied\n\nYou don't have permission to view "${artifact.title}"\n\nYour role: ${currentRole}\nRequired: ${artifact.access_level}`);
-    return;
-  }
-  
-  window.location.href = `view-artifact.html?id=${artifact.id}`;
-}
-
-function clearFilters() {
-  document.getElementById('searchQuery').value = '';
-  document.getElementById('accessFilter').value = '';
-  document.getElementById('typeFilter').value = '';
-  document.getElementById('dateFrom').value = '';
-  document.getElementById('dateTo').value = '';
-  
-  document.getElementById('loadingState').style.display = 'block';
-  document.getElementById('loadingState').textContent = 'Enter a search query or apply filters to find artifacts';
-  document.getElementById('resultsArea').style.display = 'none';
-  document.getElementById('accessWarning').style.display = 'none';
-}
-
+/*
+  Updates statistics panel
+*/
 function updateStats() {
-  document.getElementById('queryCount').textContent = searchMetrics.queryCount;
-  
-  const avgLatency = searchMetrics.queryCount > 0 
-    ? (searchMetrics.totalLatency / searchMetrics.queryCount).toFixed(0)
-    : 0;
-  document.getElementById('avgLatency').textContent = avgLatency + 'ms';
-  
-  const resultsCount = document.querySelectorAll('.result-card').length;
-  document.getElementById('resultsCount').textContent = resultsCount;
-  
-  document.getElementById('deniedCount').textContent = searchMetrics.deniedCount;
+  document.getElementById('queryCount').textContent = metrics.queries;
+  document.getElementById('avgLatency').textContent = Math.round(metrics.totalLatency / metrics.queries) + "ms";
+  document.getElementById('resultsCount').textContent =
+    document.querySelectorAll('.result-card').length;
 }
 
-/**
- * loadArtifacts - Fetches all accessible artifacts from server on page load
- * 
- * This function:
- * 1. Calls /api/files endpoint with current user's role
- * 2. Server returns only artifacts user has permission to view
- * 3. Transforms API response into standard artifact format
- * 4. Populates in-memory artifacts array for searching
- * 5. Handles errors gracefully (empty array fallback)
- * 
- * The artifacts array is used by performSearch() to execute searches.
- * This approach allows fast, responsive client-side filtering.
- * 
- * Normalization handles multiple field name conventions:
- * - title vs originalName
- * - uploadedBy vs uploaded_by_name
- * - accessLevel vs access_level
- */
+/*
+  Clears user filters
+*/
+function clearFilters() {
+  ['searchQuery', 'accessFilter', 'typeFilter'].forEach(i =>
+    document.getElementById(i).value = ''
+  );
+  document.getElementById('resultsArea').innerHTML = '';
+}
+
+/*
+  Converts MIME type into readable label
+*/
+function getType(m) {
+  if (!m) return 'document';
+  if (m.includes('image')) return 'image';
+  if (m.includes('audio')) return 'audio';
+  if (m.includes('video')) return 'video';
+  if (m.includes('pdf')) return 'pdf';
+  return 'document';
+}
+
+/*
+  Pull file records from backend API
+*/
 async function loadArtifacts() {
-  try {
-    // Fetch user-accessible artifacts from API
-    const response = await fetch(`http://localhost:3000/api/files?role=${currentRole}`);
-    const data = await response.json();
-    
-    if (data.success && data.files) {
-      // Transform API response to standard format
-      artifacts = data.files.map(file => ({
-        id: file.filename || file.id,
-        title: file.title || file.originalName || file.original_name,
-        description: file.description || '',
-        uploaded_by: file.uploadedBy || file.uploaded_by_name || 'Unknown',
-        upload_date: file.uploadDate || file.upload_date,
-        mimetype: file.mimetype || '',
-        access_level: file.accessLevel || file.access_level || 'public',
-        tags: file.tags || [],
-        original: file
-      }));
-      
-      console.log('📚 Loaded', artifacts.length, 'artifacts from database');
-    } else {
-      console.warn('Failed to load artifacts, using empty list');
-      artifacts = [];
-    }
-  } catch (error) {
-    console.error('Error loading artifacts:', error);
-    artifacts = [];
-  }
+  const res = await fetch(`http://localhost:3000/api/files`);
+  const data = await res.json();
+  artifacts = data.files || [];
 }
 
-// Initialize
-window.addEventListener('load', async () => {
-  console.log('🔍 Advanced Search Engine initialized');
-  console.log('👤 User:', currentUser, '| Role:', currentRole);
-  await loadArtifacts();
-});
+loadArtifacts();
 </script>
 
 </body>
