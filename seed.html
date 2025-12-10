@@ -319,9 +319,21 @@ window.addEventListener('load', async () => {
   setupFilterButtons();
 });
 
+/**
+ * loadArtifacts - Fetches all accessible artifacts from server
+ * 
+ * This function:
+ * 1. Calls /api/files endpoint with user's role
+ * 2. Server returns only artifacts user has permission to view
+ * 3. Sorts artifacts by upload date (newest first)
+ * 4. Updates UI to display artifacts in table
+ * 5. Falls back to sample data if API is unavailable
+ * 
+ * Access control is enforced server-side - client receives only authorized artifacts
+ */
 async function loadArtifacts() {
   try {
-    // Fetch artifacts from API
+    // Fetch artifacts from API with role-based filtering
     const response = await fetch(`http://localhost:3000/api/files?role=${userRole}`);
     const data = await response.json();
     
@@ -442,6 +454,26 @@ function setupFilterButtons() {
   });
 }
 
+/**
+ * displayArtifacts - Renders artifact list to HTML table
+ * 
+ * This function:
+ * 1. Iterates through artifacts array
+ * 2. Creates clickable table rows for each artifact
+ * 3. Shows artifact metadata: title, uploader, date, type, access level
+ * 4. Adds visual badge indicating access level (color-coded)
+ * 5. Makes rows clickable to navigate to view-artifact.html
+ * 6. Handles access control display (hides unauthorized artifacts)
+ * 
+ * @param {Array} artifacts - Array of artifact objects to display
+ * 
+ * Table columns:
+ * - Title: Artifact name
+ * - Uploaded By: Username/organization
+ * - Date Added: Upload date (MM/DD/YYYY)
+ * - Type: File type (Image, Audio, Video, PDF, Document)
+ * - Access: Public/Tribe1/Tribe2/Tribe3 with color badge
+ */
 function displayArtifacts(artifacts) {
   const tbody = document.getElementById('artifactTableBody');
   tbody.innerHTML = '';
@@ -522,10 +554,27 @@ function displayArtifacts(artifacts) {
   }
 }
 
+/**
+ * filterArtifacts - Filters artifact list by access level
+ * 
+ * User can filter artifacts by:
+ * - All: Show all accessible artifacts
+ * - Public: Show only public artifacts
+ * - Tribe1/2/3: Show only that tribe's artifacts
+ * 
+ * This function:
+ * 1. Updates which filter button appears "active" (highlighted)
+ * 2. Filters allArtifacts array by selected access level
+ * 3. Re-renders table with filtered results
+ * 4. Resets search box to avoid confusion
+ * 
+ * @param {string} filter - Filter value (all, public, tribe1, tribe2, tribe3)
+ * @param {HTMLElement} buttonElement - Filter button element to highlight
+ */
 function filterArtifacts(filter, buttonElement) {
   currentFilter = filter;
   
-  // Update active button
+  // Update active button styling
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.remove('active');
   });
@@ -544,10 +593,30 @@ function filterArtifacts(filter, buttonElement) {
   
   displayArtifacts(filtered);
   
-  // Reset search
+  // Reset search to prevent confusing UI state
   document.getElementById('artInput').value = '';
 }
 
+/**
+ * searchTable - Filters visible artifacts by text search (client-side)
+ * 
+ * Real-time search as user types in the search input box.
+ * Searches across all table columns:
+ * - Title
+ * - Uploader name
+ * - Date
+ * - File type
+ * - Access level
+ * 
+ * This is client-side filtering for fast, responsive search.
+ * For advanced searching with complex criteria, see advanced-search.html
+ * 
+ * Behavior:
+ * - Case-insensitive search
+ * - Hides rows that don't match
+ * - Shows "no results" message if no matches
+ * - Triggered by onkeyup event on search input
+ */
 function searchTable() {
   const input = document.getElementById('artInput').value.toUpperCase();
   const tbody = document.getElementById('artifactTableBody');
@@ -555,10 +624,12 @@ function searchTable() {
   
   let visibleCount = 0;
   
+  // Iterate through table rows and show/hide based on search match
   for (let i = 0; i < rows.length; i++) {
     const cells = rows[i].getElementsByTagName('td');
     let found = false;
     
+    // Search all cells in the row
     for (let j = 0; j < cells.length; j++) {
       if (cells[j].innerHTML.toUpperCase().indexOf(input) > -1) {
         found = true;
@@ -566,6 +637,7 @@ function searchTable() {
       }
     }
     
+    // Show or hide row based on match
     if (found) {
       rows[i].style.display = '';
       visibleCount++;
