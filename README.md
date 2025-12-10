@@ -255,6 +255,8 @@ You should see:
 
 ## Uploading Artifacts
 
+To read more in detail on how to use the website read the User Manual: [Link Text](User Manual.pdf)
+
 1. **Login** with appropriate credentials
 2. Navigate to **Upload** page
 3. Fill in artifact details:
