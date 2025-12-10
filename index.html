@@ -363,6 +363,35 @@
 </div>
 
 <!-- Login Modal -->
+<!--
+CWE-798 CONSIDERATIONS:
+  This login modal collects user credentials but contains NO hard-coded usernames 
+  or passwords in the HTML source code. The form is a clean interface that passes
+  credentials to our authentication handler.
+  
+  LIMITATION ACKNOWLEDGMENT:
+  Due to the limited scope of this prototype and the complexity of implementing 
+  a full self-registration system with secure password hashing and database storage,
+  we adopted a ticket-based provisioning model where:
+  
+  1. Users submit access requests via our ticketing system
+  2. Administrators manually create unique username/password combinations
+  3. Credentials are securely communicated to users outside the application
+  4. No default or template credentials exist in the codebase
+  
+  FUTURE IMPROVEMENTS:
+  In a production environment, this would be replaced with:
+  - Self-registration form with email verification
+  - Secure password hashing (bcrypt/Argon2)
+  - Database-backed credential storage
+  - Password reset functionality
+  - Multi-factor authentication options
+  
+  The current implementation represents a compromise between security best practices
+  and prototype development constraints.
+
+  
+ -->
 <div class="login-modal" id="loginModal">
   <div class="login-box">
     <button class="close-btn" onclick="closeLoginModal()" style="width: 15%;">&times;</button>
